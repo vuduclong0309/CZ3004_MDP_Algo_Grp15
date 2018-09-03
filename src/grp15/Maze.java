@@ -1,20 +1,14 @@
 package grp15;
 
 public class Maze{
-    static int DEFAULT_WIDTH = 20;
-    static int DEFAULT_HEIGHT = 20;
+    public static int MAZE_WIDTH = 20;
+    public static int MAZE_HEIGHT = 15;
 
-    private int width, height;
-    private Cell[][] mazeMap;
+    private Cell[][] mazeMap = new Cell[MAZE_WIDTH][MAZE_HEIGHT];
+    private Robot robot;
+    private int[][] maze = new int[MAZE_WIDTH][MAZE_HEIGHT];// for fastest path
 
-    public Maze(){
-        this.width = DEFAULT_WIDTH;
-        this.height = DEFAULT_HEIGHT;
-    }
-
-    public Maze(Cell[][] cells, int width, int height){
+    public Maze(Cell[][] cells){
         this.mazeMap = cells;
-        this.width = width;
-        this.height = height;
     }
 }
