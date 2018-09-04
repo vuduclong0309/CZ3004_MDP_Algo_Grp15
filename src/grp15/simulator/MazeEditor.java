@@ -1,4 +1,6 @@
-package grp15.object;
+package grp15.simulator;
+
+import grp15.object.Cell;
 
 import javax.swing.*;
 import java.awt.*;

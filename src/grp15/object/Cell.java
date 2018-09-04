@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static grp15.object.MazeEditor.MAZE_HEIGHT;
-import static grp15.object.MazeEditor.MAZE_WIDTH;
+import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
+import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
 
 public class Cell extends JPanel implements CellColor{
