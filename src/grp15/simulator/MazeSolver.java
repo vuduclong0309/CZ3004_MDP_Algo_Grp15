@@ -74,4 +74,7 @@ public class MazeSolver extends JPanel implements CellColor {
         return mazeCell;
     }
 
+    public Robot getRobot() {
+        return robot;
+    }
 }

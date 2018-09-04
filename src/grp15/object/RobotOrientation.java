@@ -49,7 +49,7 @@ public class RobotOrientation {
         return this;
     }
 
-    RobotOrientation turnLeft() {
+    public RobotOrientation turnLeft() {
         switch (this.direction) {
             case NORTH:
                 this.direction = WEST;
@@ -85,9 +85,4 @@ public class RobotOrientation {
         return this;
     }
 
-    public RobotOrientation turnBack() {
-        this.turnLeft();
-        this.turnLeft();
-        return this;
-    }
 }
