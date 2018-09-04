@@ -24,22 +24,25 @@ public class MazeSolver extends JPanel implements CellColor {
 
     public void paintComponent(Graphics g)
     {
-        int i, j;
+        //draw grid line
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         g.setColor(Color.WHITE);
         g.fillRect(GRID_SIZE, GRID_SIZE, this.getWidth()-GRID_SIZE*2, this.getHeight()-GRID_SIZE*2);
-        for(j=0; j < MAZE_WIDTH; j++){
+
+        //draw maze wall
+        for(int i = 0; i < MAZE_WIDTH; i++){
             g.setColor(Color.BLACK);
-            g.fillRect((j+1)*GRID_SIZE - 2,0, 2, this.getHeight());
+            g.fillRect((i+1)*GRID_SIZE - 2,0, 2, this.getHeight());
         }
-        for(i=0; i < MAZE_HEIGHT; i++){
+        for(int i = 0; i < MAZE_HEIGHT; i++){
             g.setColor(Color.BLACK);
             g.fillRect(0,(i+1)*GRID_SIZE - 2, this.getWidth(), 2);
         }
 
-        for (i= 0; i < MAZE_HEIGHT; i++) {
-            for (j = 0; j < MAZE_WIDTH; j++) {
+        //draw arena
+        for (int i= 0; i < MAZE_HEIGHT; i++) {
+            for (int j = 0; j < MAZE_WIDTH; j++) {
                 if(mazeCell[i][j].isExplored()) {
                     g.setColor(mazeCell[i][j].getColor());
                     g.fillRect(mazeCell[i][j].getCol()*GRID_SIZE, mazeCell[i][j].getRow()*GRID_SIZE, 30, 30);

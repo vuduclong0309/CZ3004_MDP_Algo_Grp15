@@ -1,11 +1,12 @@
 package grp15.simulator;
 
 import grp15.object.Cell;
+import grp15.object.CellColor;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MazeEditor extends JPanel {
+public class MazeEditor extends JPanel implements CellColor {
     public static int MAZE_HEIGHT = 22;
     public static int MAZE_WIDTH = 17;
 
