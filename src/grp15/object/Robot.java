@@ -1,6 +1,6 @@
-package grp15;
+package grp15.object;
 
-import static grp15.Direction.*;
+import static grp15.object.Direction.*;
 
 enum Direction {
     NORTH, SOUTH, EAST, WEST;
@@ -9,6 +9,8 @@ enum Direction {
 public class Robot {
     private int pos_x, pos_y;
     private Direction direction = NORTH;
+
+    public Robot(){};
 
     public Robot(int x, int y){
         this.pos_x = x;
