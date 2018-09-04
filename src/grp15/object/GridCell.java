@@ -1,6 +1,7 @@
-package simulator;
+package grp15.object;
 
 import java.awt.*;
+
 
 public class GridCell {
 	

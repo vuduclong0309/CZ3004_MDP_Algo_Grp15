@@ -3,7 +3,8 @@ package simulator;
 
 import static util.MapIOProcessor.readFile;
 
-import robot.Robot;
+import grp15.object.Robot;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

@@ -3,7 +3,8 @@ package simulator;
 import java.awt.*;
 import javax.swing.JPanel;
 
-import robot.Robot;
+import grp15.object.GridCell;
+import grp15.object.Robot;
 
 public class Map extends JPanel {
 	
