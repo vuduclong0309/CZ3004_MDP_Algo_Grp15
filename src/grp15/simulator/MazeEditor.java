@@ -6,22 +6,26 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MazeEditor extends JPanel {
-    public static int MAZE_WIDTH = 20;
-    public static int MAZE_HEIGHT = 15;
+    public static int MAZE_HEIGHT = 22;
+    public static int MAZE_WIDTH = 17;
 
-    private JPanel[][] mapGUI = new JPanel[MAZE_WIDTH][MAZE_HEIGHT];
-    private Cell[][] mazeMap = new Cell[MAZE_WIDTH][MAZE_HEIGHT];
+    private JPanel[][] mapGUI = new JPanel[MAZE_HEIGHT][MAZE_WIDTH];
+    private Cell[][] mazeMap = new Cell[MAZE_HEIGHT][MAZE_WIDTH];
 
     public MazeEditor(){ initiate(); };
     protected void initiate() {
-        this.setLayout(new GridLayout(MAZE_WIDTH, MAZE_HEIGHT));
-        for (int i = 0; i < MAZE_WIDTH; i++) {
-            for (int j = 0; j < MAZE_HEIGHT; j++) {
+        this.setLayout(new GridLayout(MAZE_HEIGHT, MAZE_WIDTH));
+        for (int i = 0; i < MAZE_HEIGHT; i++) {
+            for (int j = 0; j < MAZE_WIDTH; j++) {
                 mazeMap[i][j] = new Cell(i, j);
                 mazeMap[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
                 mapGUI[i][j] = mazeMap[i][j];
                 this.add(mazeMap[i][j]);
             }
         }
+    }
+
+    public Cell[][] getMazeMap(){
+        return this.mazeMap;
     }
 }

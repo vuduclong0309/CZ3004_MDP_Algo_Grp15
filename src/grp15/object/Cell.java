@@ -6,11 +6,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
+import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
 
 public class Cell extends JPanel implements CellColor{
+    public static final int GRID_SIZE = 32;
     private int row, col;
     private boolean explored = false;
     private Color color;
@@ -40,7 +41,7 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public boolean isBlocked() {
-        return (this.row == 0 || this.row == MAZE_WIDTH - 1 || this.col == MAZE_HEIGHT - 1 || this.col == 0);
+        return (this.row == 0 || this.row == MAZE_HEIGHT - 1 || this.col == MAZE_WIDTH - 1 || this.col == 0);
     }
 
     public boolean isStart() {
@@ -48,11 +49,15 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public boolean isGoal() {
-        return (this.col>=MAZE_HEIGHT - 4 && this.row >= MAZE_WIDTH - 4);
+        return (this.col>= MAZE_WIDTH - 4 && this.row >= MAZE_HEIGHT - 4);
     }
 
     public boolean isExplored(){
         return this.explored;
+    }
+
+    public Color getColor(){
+        return this.color;
     }
 
     public int getRow() {

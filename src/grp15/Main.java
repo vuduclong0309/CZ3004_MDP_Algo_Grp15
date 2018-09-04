@@ -1,7 +1,9 @@
 package grp15;
 
+import algorithm.Explorer;
 import grp15.simulator.MazeEditor;
 import grp15.object.Robot;
+import grp15.simulator.MazeSolver;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -17,6 +19,7 @@ import javax.swing.JPanel;
 final public class Main
 {
     private static MazeEditor map;
+    private static MazeSolver mapSolver;
     private static Robot bot;
     private static int time;
     public static void main(String[] args)
@@ -41,6 +44,13 @@ final public class Main
 
 
             public void actionPerformed(ActionEvent e) {
+                //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
+                bot = new Robot(1,1);
+                System.out.println("bot created!");
+                mapSolver = new MazeSolver(map, bot);
+                Explorer exp = new Explorer(bot, mapSolver);
+                System.out.println("Explorer created!");
+                exp.launch();
 
             }
 

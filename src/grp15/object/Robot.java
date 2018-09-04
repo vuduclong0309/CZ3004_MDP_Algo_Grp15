@@ -1,35 +1,33 @@
 package grp15.object;
 
-import static grp15.object.Direction.*;
-
-enum Direction {
-    NORTH, SOUTH, EAST, WEST;
-}
-
 public class Robot {
-    private int pos_x, pos_y;
-    private Direction direction = NORTH;
+    public static final int NORTH = 1;
+    public static final int SOUTH = 2;
+    public static final int EAST = 3;
+    public static final int WEST = 4;
+    private int posX, posY;
+    private int direction = NORTH;
 
     public Robot(){};
 
     public Robot(int x, int y){
-        this.pos_x = x;
-        this.pos_y = y;
+        this.posX = x;
+        this.posY = y;
     }
 
     public void moveForward() {
         switch (this.direction) {
             case NORTH:
-                this.pos_y--;
+                this.posY--;
                 break;
             case SOUTH:
-                this.pos_y++;
+                this.posY++;
                 break;
             case EAST:
-                this.pos_x++;
+                this.posX++;
                 break;
             case WEST:
-                this.pos_x--;
+                this.posX--;
                 break;
         }
     }
@@ -73,7 +71,15 @@ public class Robot {
         this.turnLeft();
     }
 
-    public Direction getDirection() {
+    public int getDirection() {
         return this.direction;
+    }
+
+    public int getPosX(){
+        return this.posX;
+    }
+
+    public int getPosY(){
+        return this.posY;
     }
 }
