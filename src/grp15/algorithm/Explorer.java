@@ -1,4 +1,4 @@
-package algorithm;
+package grp15.algorithm;
 
 import grp15.algorithm.DijkstraSolver;
 import grp15.object.Robot;
