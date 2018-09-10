@@ -1,6 +1,6 @@
 package grp15;
 
-import algorithm.Explorer;
+import grp15.algorithm.Explorer;
 import grp15.simulator.MazeEditor;
 import grp15.object.Robot;
 import grp15.simulator.MazeSolver;
@@ -48,7 +48,7 @@ final public class Main
                 bot = new Robot(1,1);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
-                Explorer exp = new Explorer(bot, mapSolver);
+                Explorer exp = new Explorer(mapSolver);
                 System.out.println("Explorer created!");
                 exp.launch();
 

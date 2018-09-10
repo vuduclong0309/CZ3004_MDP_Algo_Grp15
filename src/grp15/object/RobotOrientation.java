@@ -1,6 +1,7 @@
 package grp15.object;
 
 import grp15.object.Robot.*;
+import javafx.util.Pair;
 
 import static grp15.object.Robot.*;
 
@@ -17,6 +18,12 @@ public class RobotOrientation {
         this.posX = r.getPosX();
         this.posY = r.getPosY();
         this.direction = r.getDirection();
+    }
+
+    public RobotOrientation(Pair<Pair<Integer, Integer>, Integer> pi){
+        this.posX = pi.getKey().getKey();
+        this.posY = pi.getKey().getValue();
+        this.direction = pi.getValue();
     }
 
     public int getPosX(){
@@ -83,6 +90,10 @@ public class RobotOrientation {
                 break;
         }
         return this;
+    }
+
+    public Pair<Pair<Integer, Integer>, Integer> toPairFormat(){
+        return new Pair(new Pair(posX,posY),direction);
     }
 
 }

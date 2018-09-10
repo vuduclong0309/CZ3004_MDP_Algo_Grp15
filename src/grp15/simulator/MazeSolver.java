@@ -50,7 +50,36 @@ public class MazeSolver extends JPanel implements CellColor {
             }
         }
 
+        //explored cells
+        for (int i= 0; i < MAZE_HEIGHT; i++) {
+            for (int j = 0; j < MAZE_WIDTH; j++) {
+                if(mazeCell[i][j].isExplored()) {
+                    g.setColor(mazeCell[i][j].getColor());
+                    g.fillRect(i*GRID_SIZE, j*GRID_SIZE, 30, 30);
+                    g.setColor(mazeCell[i][j].getColor());
+                }
+            }
+        }
 
+        //robot
+
+        g.setColor(ROBOT_BODY);
+        g.fillRect(this.robot.getPosX()*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 96, 96);
+
+        switch (this.robot.getDirection()){
+            case NORTH: g.setColor(ROBOT_HEAD);
+                g.fillRect(this.robot.getPosX()*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 30, 30);
+                break;
+            case SOUTH: g.setColor(ROBOT_HEAD);
+                g.fillRect(this.robot.getPosX()*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 30, 30);
+                break;
+            case EAST: 	g.setColor(ROBOT_HEAD);
+                g.fillRect(this.robot.getPosX()*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 30, 30);
+                break;
+            case WEST:  g.setColor(ROBOT_HEAD);
+                g.fillRect(this.robot.getPosX()*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 30, 30);
+                break;
+        }
     }
 
     private void initiate(MazeEditor map) {
@@ -63,6 +92,22 @@ public class MazeSolver extends JPanel implements CellColor {
                 }
             }
         }
+    }
+
+    public void senseMap(){
+        int posX = robot.getPosX(), posY = robot.getPosY();
+        mazeCell[posX-1][posY].setExplored();
+        mazeCell[posX-1][posY+1].setExplored();
+        mazeCell[posX-1][posY+2].setExplored();
+        mazeCell[posX+3][posY].setExplored();
+        mazeCell[posX+3][posY+1].setExplored();
+        mazeCell[posX+3][posY+2].setExplored();
+        mazeCell[posX-1][posY-1].setExplored();
+        mazeCell[posX-1][posY-1].setExplored();
+        mazeCell[posX-1][posY-1].setExplored();
+        mazeCell[posX][posY+3].setExplored();
+        mazeCell[posX+1][posY+3].setExplored();
+        mazeCell[posX+2][posY+3].setExplored();
     }
 
     public Cell explorePosition(int x, int y){

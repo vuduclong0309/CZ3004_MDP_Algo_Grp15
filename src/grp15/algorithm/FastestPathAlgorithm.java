@@ -23,8 +23,8 @@ public class FastestPathAlgorithm {
     public void solveShortestPath(){
         Robot bot = maze.getRobot();
         DijkstraSolver solver = new DijkstraSolver(maze.getMazeCell(), this.turnCost, this.moveCost, bot);
-        HashMap<RobotOrientation, Pair<Integer, Integer>> solution = solver.getDistanceMap();
-        while(solution.get(new RobotOrientation(bot)).getValue()!=Robot.STOP){
+        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> solution = solver.getDistanceMap();
+        while(solution.get(new RobotOrientation(bot).toPairFormat()).getValue()!=Robot.STOP){
             int nextMoveSignal = solution.get(new RobotOrientation(bot)).getValue();
             bot.moveRobot(nextMoveSignal);
             System.out.println("Move " + nextMoveSignal);
