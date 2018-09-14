@@ -25,7 +25,8 @@ public class DijkstraSolver {
     };
 
     public ArrayList<Integer> getPathFromDistanceMap(HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap, RobotOrientation s, RobotOrientation t){
-        RobotOrientation start = new RobotOrientation(s), target = new RobotOrientation(t);
+        RobotOrientation start = new RobotOrientation(s),
+                target = new RobotOrientation(t);
         System.out.println("#path " + start.toPairFormat().toString() + target.toPairFormat().toString());
         ArrayList<Integer> path = new ArrayList<Integer>();
         while(target.isEqual(start)==false){

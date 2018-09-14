@@ -69,10 +69,8 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public void setColor(Color c){
-        if(this.color != START && this.color != GOAL){
             this.color = c;
-        }
-
+            setBackground(this.color);
     }
     public void setExplored(){
         this.explored = true;

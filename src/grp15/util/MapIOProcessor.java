@@ -14,7 +14,7 @@ public class MapIOProcessor {
 			//InputStream in = new FileInputStream("arenas/" + filename + ".txt");
 			BufferedReader bf = new BufferedReader(new FileReader(file));
 
-			char[][] mapEncoding = new char[23][23];
+			char[][] mapEncoding = new char[22][17];
 			int value = 0;
 			int rowPtr = 0;
 			int colPtr = 0;
@@ -23,11 +23,16 @@ public class MapIOProcessor {
 				mapEncoding[rowPtr][colPtr] = binData;
 				//if (binData == '1')
 					//map.setObstacleNVirtualWall(rowPtr, colPtr, true);
-				colPtr++;
-				if (colPtr == 15) {
+                System.out.println("col no: " + colPtr);
+                System.out.println("row no: " + rowPtr);
+                colPtr++;
+				if (colPtr == 17) {
 					colPtr = 0;
 					rowPtr++;
 				}
+
+				if (rowPtr == 22)
+					break;
 				
 			}
 			

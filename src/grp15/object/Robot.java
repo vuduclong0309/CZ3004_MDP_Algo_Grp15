@@ -102,4 +102,8 @@ public class Robot {
     public int getPosY(){
         return this.posY;
     }
+
+    public RobotOrientation getOrientation(){
+        return new RobotOrientation(this);
+    }
 }
