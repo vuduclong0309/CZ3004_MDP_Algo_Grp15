@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import static grp15.object.Cell.GRID_SIZE;
+import static grp15.simulator.MazeEditor.*;
+
 
 final public class Main
 {
@@ -26,7 +29,7 @@ final public class Main
     {
         JFrame f = new JFrame();
         f.setTitle("Map editor ");
-        f.setSize(new Dimension(700,800));
+        f.setSize(new Dimension(MAZE_WIDTH*GRID_SIZE,MAZE_HEIGHT*GRID_SIZE));
         f.setResizable(false);
 
         map = new MazeEditor();

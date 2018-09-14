@@ -19,6 +19,7 @@ public class MazeEditor extends JPanel implements CellColor {
         for (int i = 0; i < MAZE_HEIGHT; i++) {
             for (int j = 0; j < MAZE_WIDTH; j++) {
                 mazeMap[i][j] = new Cell(i, j);
+                if(i==0 || j == 0 || i == MAZE_HEIGHT - 1 || j == MAZE_WIDTH - 1) mazeMap[i][j].setExplored();
                 mazeMap[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
                 mapGUI[i][j] = mazeMap[i][j];
                 this.add(mazeMap[i][j]);

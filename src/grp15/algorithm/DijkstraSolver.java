@@ -5,9 +5,7 @@ import grp15.object.Robot;
 import grp15.object.RobotOrientation;
 import javafx.util.Pair;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 import static grp15.object.Robot.*;
 import static grp15.simulator.MazeEditor.*;
@@ -15,15 +13,48 @@ import static grp15.simulator.MazeEditor.*;
 public class DijkstraSolver {
     Cell[][] mazeMap;
     Robot robot;
+    boolean visited [][][] = new boolean[MAZE_HEIGHT][MAZE_WIDTH][4];
+
     int turnCost, moveCost;
-    public DijkstraSolver(Cell[][] maze, int c, int m, Robot r){
+    public DijkstraSolver(Cell[][] maze, boolean explored[][][], int c, int m, Robot r){
         this.mazeMap = maze;
         this.turnCost = c;
         this.moveCost = m;
         this.robot = r;
+        this.visited = explored;
     };
 
-    public  HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> getDistanceMap(){
+    public ArrayList<Integer> getPathFromDistanceMap(HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap, RobotOrientation s, RobotOrientation t){
+        RobotOrientation start = new RobotOrientation(s), target = new RobotOrientation(t);
+        System.out.println("#path " + start.toPairFormat().toString() + target.toPairFormat().toString());
+        ArrayList<Integer> path = new ArrayList<Integer>();
+        while(target.isEqual(start)==false){
+            System.out.println("@"+target.toPairFormat().toString() + "goal" + start.toPairFormat().toString());
+            int lastMove = distanceMap.get(target.toPairFormat()).getValue();
+            System.out.println("@"+target.toPairFormat().toString()+"direct"+lastMove);
+            path.add(lastMove);
+            switch (lastMove) {
+                case MOVE_FORWARD: //Move backward
+                    target.turnRight();
+                    target.turnRight();
+                    target.moveForward();
+                    target.turnRight();
+                    target.turnRight();
+                    break;
+                case TURN_LEFT:
+                    target.turnRight();
+                    break;
+                case TURN_RIGHT:
+                    target.turnLeft();
+                    break;
+            }
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
+    public HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> getDistanceMap(){
+        boolean st = true;
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> res = new HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>>();
         PriorityQueue<Pair<Integer, RobotOrientation>> q = new PriorityQueue<>(100, new PairComparator());
         RobotOrientation start = new RobotOrientation(robot);
@@ -34,23 +65,24 @@ public class DijkstraSolver {
             Pair<Integer, RobotOrientation> tmp = q.poll();
             int orientationValue = tmp.getKey();
             RobotOrientation pos = tmp.getValue(), nextPos;
-            //System.out.println("popping "+pos.getPosX() + " " + pos.getPosY() + " " + orientationValue);
+            if(visited[pos.getPosX()][pos.getPosY()][pos.getDirection()] == false && st == false) continue;
+            st = false;
+            System.out.println(pos.toPairFormat().toString());
             //Move forward
+            System.out.println("Try move forward");
             nextPos = new RobotOrientation(pos);
             //System.out.println("nextpos" + nextPos.getPosX() + nextPos.getPosY());
             nextPos.moveForward();
-            //System.out.println("nextpos" + nextPos.getPosX() + nextPos.getPosY());
+            System.out.println("nextpos" + nextPos.toPairFormat().toString());
             if(isValidPosition(nextPos)) {
-                //System.out.println("is valid position");
+                System.out.println("is valid position");
                 if (!res.containsKey(nextPos.toPairFormat())) {
-                    res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, STOP));
-                    res.replace(pos.toPairFormat(), new Pair(orientationValue, MOVE_FORWARD));
+                    res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, MOVE_FORWARD));
                     //System.out.println("yolo2 "+pos.getPosX() + " " + pos.getPosY() + " " + res.get(nextPos.toPairFormat()).getKey() + " " + orientationValue + moveCost);
                     q.add(new Pair(orientationValue + moveCost, nextPos));
                 } else if (res.get(nextPos.toPairFormat()).getKey() > orientationValue + moveCost) {
                     //System.out.println("yolo "+pos.getPosX() + " " + pos.getPosY() + " " + res.get(nextPos.toPairFormat()).getKey() + " " + orientationValue + moveCost);
-                    res.replace(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, STOP));
-                    res.replace(pos.toPairFormat(), new Pair(orientationValue, MOVE_FORWARD));
+                    res.replace(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, MOVE_FORWARD));
                     q.add(new Pair(orientationValue + moveCost, nextPos));
                 }
             }
@@ -63,13 +95,11 @@ public class DijkstraSolver {
             if(isValidPosition(nextPos)) {
                 //System.out.println("is valid position");
                 if (!res.containsKey(nextPos.toPairFormat())) {
-                    res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, STOP));
-                    res.replace(pos.toPairFormat(), new Pair(orientationValue, TURN_LEFT));
+                    res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, TURN_LEFT));
                     q.add(new Pair(orientationValue + turnCost, nextPos));
-                } else if (res.get(nextPos.toPairFormat()).getKey() > orientationValue + turnCost * 2) {
+                } else if (res.get(nextPos.toPairFormat()).getKey() > orientationValue + turnCost) {
                     //System.out.println("yolo "+pos.getPosX() + " " + pos.getPosY() + " " + res.get(nextPos.toPairFormat()).getKey() + " " + orientationValue + moveCost);
-                    res.replace(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, STOP));
-                    res.replace(pos.toPairFormat(), new Pair(orientationValue, TURN_LEFT));
+                    res.replace(nextPos.toPairFormat(), new Pair(orientationValue + turnCost, TURN_LEFT));
                     q.add(new Pair(orientationValue + turnCost, nextPos));
                 }
             }
@@ -81,13 +111,11 @@ public class DijkstraSolver {
             if(isValidPosition(nextPos)) {
                 //System.out.println("is valid position");
                 if (!res.containsKey(nextPos.toPairFormat())) {
-                    res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, STOP));
-                    res.replace(pos.toPairFormat(), new Pair(orientationValue, TURN_RIGHT));
+                    res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, TURN_RIGHT));
                     q.add(new Pair(orientationValue + turnCost, nextPos));
-                } else if (res.get(nextPos.toPairFormat()).getKey() > orientationValue + turnCost * 2) {
+                } else if (res.get(nextPos.toPairFormat()).getKey() > orientationValue + turnCost) {
                     //System.out.println("yolo "+pos.getPosX() + " " + pos.getPosY() + " " + res.get(nextPos.toPairFormat()).getKey() + " " + orientationValue + moveCost);
-                    res.replace(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, STOP));
-                    res.replace(pos.toPairFormat(), new Pair(orientationValue, TURN_RIGHT));
+                    res.replace(nextPos.toPairFormat(), new Pair(orientationValue + turnCost, TURN_RIGHT));
                     q.add(new Pair(orientationValue + turnCost, nextPos));
                 }
             }
@@ -101,21 +129,33 @@ public class DijkstraSolver {
         return this.robot;
     }
 
+
     private boolean isValidPosition(RobotOrientation r){
         int posX = r.getPosX(), posY = r.getPosY();
-        //System.out.println("validity check" + posX + posY);
+        System.out.println("validity check" + r.toPairFormat().toString());
         //out of arena
-        if(posX<=0 || posX >= MAZE_WIDTH || posY<=0 || posY >= MAZE_HEIGHT) return false;
-        //System.out.println("in arena");
+        if(posX<=0 || posX >= MAZE_HEIGHT || posY<=0 || posY >= MAZE_WIDTH) return false;
+        System.out.println("in arena");
         //maze position is blocked
         for(int i=0;i<=2;i++){
             for(int j=0;j<=2;j++){
+                //System.out.println((posX+i)+" "+(posY+j));
                 if(mazeMap[posX+i][posY+j].isBlocked()) return false;
+                //System.out.println("not blocked");
             }
         }
-        //System.out.println("valid");
+        System.out.println("valid");
         return true;
     }
+
+    public Cell[][] getMaze() {
+        return mazeMap;
+    }
+
+    public boolean[][][] getVisited() {
+        return visited;
+    }
+
 }
 
 class PairComparator implements Comparator<Pair<Integer, RobotOrientation>>{

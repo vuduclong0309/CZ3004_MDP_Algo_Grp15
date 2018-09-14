@@ -8,8 +8,10 @@ import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static grp15.object.Cell.GRID_SIZE;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
@@ -22,6 +24,7 @@ public class Explorer {
     private int time = 360;
     private boolean stopFlag = true;
     private boolean interrupted;
+    boolean visited [][][] = new boolean[MAZE_HEIGHT][MAZE_WIDTH][4];
 
     public Explorer(MazeSolver m) {
         this.map = m;
@@ -34,7 +37,7 @@ public class Explorer {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.getContentPane().add(BorderLayout.CENTER, map);
                 frame.setResizable(false);
-                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+2), MAZE_HEIGHT * (GRID_SIZE+2)));
+                frame.setSize(new Dimension(MAZE_HEIGHT * (GRID_SIZE+2), MAZE_WIDTH * (GRID_SIZE+2)));
                 //setting the window location
                 frame.setLocationByPlatform(false);
                 frame.setLocation(0, 0);
@@ -50,42 +53,54 @@ public class Explorer {
     }
 
     public void startExploration(){
-        System.out.println(map.getRobot().getPosX());
-        DijkstraSolver solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        DijkstraSolver solver = new DijkstraSolver(map.getMazeCell(), visited, 1, 1, this.map.getRobot());
         map.senseMap();
         this.map.repaint();
         int i = 0;
         do{
+            System.out.println("iteration"+i);
             i++;
-            System.out.println(map.getRobot().getPosX());
-            System.out.println(solver.getRobot().getPosX());
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> solution = solver.getDistanceMap();
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: solution.entrySet()){
-                if (nextPosMinDistance == null || nextPosMinDistance.getValue().getKey() > entry.getValue().getKey()){
-                    //System.out.println(nextPosMinDistance);
-                    if(nextPosMinDistance == null) {
+                System.out.println("entry"+entry.toString());
+                if (nextPosMinDistance == null){
+                    int nextPosX = entry.getKey().getKey().getKey();
+                    int nextPosY = entry.getKey().getKey().getValue();
+                    int direction = entry.getKey().getValue();
+                    if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
-                    } else {
-                        int nextPosX = nextPosMinDistance.getKey().getKey().getKey();
-                        int nextPosY = nextPosMinDistance.getKey().getKey().getValue();
-                        if (!map.getMazeCell()[nextPosX][nextPosY].isExplored())
-                            nextPosMinDistance = entry;
                     }
+                } else if (nextPosMinDistance.getValue().getKey() > entry.getValue().getKey()){
+                    System.out.println(nextPosMinDistance.toString());
+                    int nextPosX = entry.getKey().getKey().getKey();
+                    int nextPosY = entry.getKey().getKey().getValue();
+                    int direction = entry.getKey().getValue();
+                    if (visited[nextPosX][nextPosY][direction] == false)
+                        nextPosMinDistance = entry;
                 }
             }
+            System.out.println("done entry");
+            if(nextPosMinDistance == null){
+                System.out.println("Exploration Completed");
+                break;
+            }
             //System.out.println(solution.get(new RobotOrientation(robot).toPairFormat()));
-            int nextMoveSignal = solution.get(new RobotOrientation(map.getRobot()).toPairFormat()).getValue();
-            do{
-                System.out.println("Move!");
-                System.out.println(map.getRobot().getPosX() + " "+ map.getRobot().getPosY() + " " + nextMoveSignal);
-                map.getRobot().moveRobot(nextMoveSignal);
-                System.out.println(map.getRobot().getPosX() + " "+ map.getRobot().getPosY());
+            ArrayList<Integer> path = solver.getPathFromDistanceMap(solution, new RobotOrientation(solver.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
+            visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
+            for(int j = 0; j < path.size(); j++){
+                System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + path.get(j));
+                map.getRobot().moveRobot(path.get(j));
                 map.senseMap();
+                for(int k=1;k<=100;k++) System.out.println("pause thread");
                 this.map.repaint();
-                nextMoveSignal = solution.get(new RobotOrientation(map.getRobot()).toPairFormat()).getValue();
-            } while(nextMoveSignal != Robot.STOP);
-        }while(i<=400);
+                for(int k = 0; k < 4; k++) visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][k] = true;
+            }
+
+            FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+            pathAlgorithm.moveRobotToPosition(new RobotOrientation() map);
+            System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
+        }while(i<4000);
         System.out.println("finished");
     }
 }

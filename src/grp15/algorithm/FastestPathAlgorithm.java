@@ -1,4 +1,4 @@
-package algorithm;
+package grp15.algorithm;
 
 import grp15.algorithm.DijkstraSolver;
 import grp15.object.Robot;
@@ -6,28 +6,28 @@ import grp15.object.RobotOrientation;
 import grp15.simulator.MazeSolver;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FastestPathAlgorithm {
-    private MazeSolver maze;
-    int turnCost, moveCost;
-    int timeLimit;
+import static grp15.object.Robot.*;
 
-    public FastestPathAlgorithm(MazeSolver m, int turnCost, int moveCost, int t){
-        this.turnCost = turnCost;
-        this.moveCost = moveCost;
-        this.timeLimit = t;
-        this.maze = m;
+public class FastestPathAlgorithm {
+    private DijkstraSolver solver;
+
+    public FastestPathAlgorithm(DijkstraSolver s){
+        this.solver = s;
     }
 
-    public void solveShortestPath(){
-        Robot bot = maze.getRobot();
-        DijkstraSolver solver = new DijkstraSolver(maze.getMazeCell(), this.turnCost, this.moveCost, bot);
-        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> solution = solver.getDistanceMap();
-        while(solution.get(new RobotOrientation(bot).toPairFormat()).getValue()!=Robot.STOP){
-            int nextMoveSignal = solution.get(new RobotOrientation(bot)).getValue();
-            bot.moveRobot(nextMoveSignal);
-            System.out.println("Move " + nextMoveSignal);
+    public void moveRobotToPosition(RobotOrientation target, MazeSolver mazeMap){
+        ArrayList<Integer> movePath = solver.getPathFromDistanceMap(solver.getDistanceMap(), solver.getRobot().getOrientation(), target);
+        solver.getVisited()[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
+        for(int j = 0; j < movePath.size(); j++){
+            System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + movePath.get(j));
+            mazeMap.getRobot().moveRobot(movePath.get(j));
+            mazeMap.senseMap();
+            for(int k=1;k<=100;k++) System.out.println("pause thread");
+            mazeMap.repaint();
+            for(int k = 0; k < 4; k++) solver.getVisited()[solver.getRobot().getPosX()][solver.getRobot().getPosY()][k] = true;
         }
     }
 }
