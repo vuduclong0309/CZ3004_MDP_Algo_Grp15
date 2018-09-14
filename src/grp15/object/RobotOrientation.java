@@ -96,7 +96,4 @@ public class RobotOrientation {
         return new Pair(new Pair(posX,posY),direction);
     }
 
-    public boolean isEqual(RobotOrientation r){
-        return (this.posX == r.getPosX()) && (this.posY == r.getPosY()) && (this.getDirection() == r.getDirection());
-    }
 }
