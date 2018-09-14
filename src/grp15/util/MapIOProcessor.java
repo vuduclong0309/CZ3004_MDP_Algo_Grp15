@@ -11,7 +11,6 @@ public class MapIOProcessor {
 	 * */
 	public static void readMapFileFromDisk(File file, MazeEditor mz) {
 		try {
-			//InputStream in = new FileInputStream("arenas/" + filename + ".txt");
 			BufferedReader bf = new BufferedReader(new FileReader(file));
 
 			char[][] mapEncoding = new char[22][17];
@@ -21,19 +20,14 @@ public class MapIOProcessor {
 			while ((value = bf.read()) != -1) {
 				char binData = (char)value;
 				mapEncoding[rowPtr][colPtr] = binData;
-				//if (binData == '1')
-					//map.setObstacleNVirtualWall(rowPtr, colPtr, true);
-                System.out.println("col no: " + colPtr);
-                System.out.println("row no: " + rowPtr);
+
                 colPtr++;
 				if (colPtr == 17) {
 					colPtr = 0;
 					rowPtr++;
 				}
-
 				if (rowPtr == 22)
 					break;
-				
 			}
 			
 			bf.close();

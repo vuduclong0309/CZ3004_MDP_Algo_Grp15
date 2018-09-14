@@ -31,7 +31,6 @@ public class MazeEditor extends JPanel implements CellColor {
             for (int j = 0; j < MAZE_WIDTH; j++) {
                 if (mapEncoding[i][j] == '1') {
                     mazeMap[i][j].setColor(BLOCKED);
-                    //this.add(mazeMap[i][j]);
                 }
 
 
