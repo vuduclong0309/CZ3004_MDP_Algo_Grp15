@@ -97,10 +97,11 @@ public class Explorer {
                 for(int k = 0; k < 4; k++) visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][k] = true;
             }
 
-            FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation() map);
             System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(i<4000);
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1,1), 0)), map);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map);
         System.out.println("finished");
     }
 }
