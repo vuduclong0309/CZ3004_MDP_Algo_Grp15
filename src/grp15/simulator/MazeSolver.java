@@ -47,7 +47,7 @@ public class MazeSolver extends JPanel implements CellColor {
                 } else{
                     g.setColor(Color.GRAY);
                 }
-                g.fillRect(maze.getMazeMap()[i][j].getRow()*GRID_SIZE, maze.getMazeMap()[i][j].getCol()*GRID_SIZE, 30, 30);
+                g.fillRect(maze.getMazeMap()[i][j].getCol()*GRID_SIZE,maze.getMazeMap()[i][j].getRow()*GRID_SIZE,30, 30);
             }
         }
 
@@ -55,20 +55,20 @@ public class MazeSolver extends JPanel implements CellColor {
         //robot
 
         g.setColor(ROBOT_BODY);
-        g.fillRect(this.robot.getPosX()*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 96, 96);
+        g.fillRect(this.robot.getPosY()*GRID_SIZE, this.robot.getPosX()*GRID_SIZE, 96, 96);
 
         switch (this.robot.getDirection()){
             case NORTH: g.setColor(ROBOT_HEAD);
-                g.fillRect(this.robot.getPosX()*GRID_SIZE, (this.robot.getPosY()+1)*GRID_SIZE, 30, 30);
+                g.fillRect(this.robot.getPosY()*GRID_SIZE, (this.robot.getPosX()+1)*GRID_SIZE, 30, 30);
                 break;
             case SOUTH: g.setColor(ROBOT_HEAD);
-                g.fillRect((this.robot.getPosX()+2)*GRID_SIZE, (this.robot.getPosY()+1)*GRID_SIZE, 30, 30);
+                g.fillRect((this.robot.getPosY()+2)*GRID_SIZE, (this.robot.getPosX()+1)*GRID_SIZE, 30, 30);
                 break;
             case EAST: 	g.setColor(ROBOT_HEAD);
-                g.fillRect((this.robot.getPosX()+2)*GRID_SIZE, (this.robot.getPosY()+1)*GRID_SIZE, 30, 30);
+                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, (this.robot.getPosX()+2)*GRID_SIZE, 30, 30);
                 break;
             case WEST:  g.setColor(ROBOT_HEAD);
-                g.fillRect((this.robot.getPosX()+1)*GRID_SIZE, this.robot.getPosY()*GRID_SIZE, 30, 30);
+                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, this.robot.getPosX()*GRID_SIZE, 30, 30);
                 break;
         }
     }

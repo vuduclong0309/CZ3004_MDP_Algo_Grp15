@@ -67,15 +67,15 @@ public class DijkstraSolver {
             RobotOrientation pos = tmp.getValue(), nextPos;
             if(visited[pos.getPosX()][pos.getPosY()][pos.getDirection()] == false && st == false) continue;
             st = false;
-            System.out.println(pos.toPairFormat().toString());
+            //System.out.println(pos.toPairFormat().toString());
             //Move forward
-            System.out.println("Try move forward");
+            //System.out.println("Try move forward");
             nextPos = new RobotOrientation(pos);
             //System.out.println("nextpos" + nextPos.getPosX() + nextPos.getPosY());
             nextPos.moveForward();
-            System.out.println("nextpos" + nextPos.toPairFormat().toString());
+            //System.out.println("nextpos" + nextPos.toPairFormat().toString());
             if(isValidPosition(nextPos)) {
-                System.out.println("is valid position");
+                //System.out.println("is valid position");
                 if (!res.containsKey(nextPos.toPairFormat())) {
                     res.put(nextPos.toPairFormat(), new Pair(orientationValue + moveCost, MOVE_FORWARD));
                     //System.out.println("yolo2 "+pos.getPosX() + " " + pos.getPosY() + " " + res.get(nextPos.toPairFormat()).getKey() + " " + orientationValue + moveCost);
@@ -120,7 +120,7 @@ public class DijkstraSolver {
                 }
             }
         }
-        System.out.println("done");
+        //System.out.println("done");
 
         return res;
     }
@@ -132,10 +132,10 @@ public class DijkstraSolver {
 
     private boolean isValidPosition(RobotOrientation r){
         int posX = r.getPosX(), posY = r.getPosY();
-        System.out.println("validity check" + r.toPairFormat().toString());
+        //System.out.println("validity check" + r.toPairFormat().toString());
         //out of arena
         if(posX<=0 || posX >= MAZE_HEIGHT || posY<=0 || posY >= MAZE_WIDTH) return false;
-        System.out.println("in arena");
+        //System.out.println("in arena");
         //maze position is blocked
         for(int i=0;i<=2;i++){
             for(int j=0;j<=2;j++){
@@ -144,7 +144,7 @@ public class DijkstraSolver {
                 //System.out.println("not blocked");
             }
         }
-        System.out.println("valid");
+        //System.out.println("valid");
         return true;
     }
 
