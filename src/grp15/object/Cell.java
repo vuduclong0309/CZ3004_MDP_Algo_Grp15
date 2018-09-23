@@ -26,8 +26,8 @@ public class Cell extends JPanel implements CellColor{
             public void mousePressed(MouseEvent e) {
                 JFrame frame = null;
                 if(color == BLOCKED){
-                        setBackground(FREE);
-                        setColor(FREE);
+                    setBackground(FREE);
+                    setColor(FREE);
                 }
                 else if(color != START && color != GOAL){
                     setBackground(BLOCKED);
@@ -41,15 +41,15 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public boolean isBlocked() {
-        return (this.row == 0 || this.row == MAZE_HEIGHT - 1 || this.col == MAZE_WIDTH - 1 || this.col == 0);
+        return (this.row == 0 || this.row == MAZE_HEIGHT - 1 || this.col == MAZE_WIDTH - 1 || this.col == 0) || (this.color == BLOCKED);
     }
 
     public boolean isStart() {
-        return (this.row <= 3 && this.col<=3);
+        return (this.row >= MAZE_HEIGHT - 4 && this.col<=3);
     }
 
     public boolean isGoal() {
-        return (this.col>= MAZE_WIDTH - 4 && this.row >= MAZE_HEIGHT - 4);
+        return (this.col>= MAZE_WIDTH - 4 && this.row <= 3);
     }
 
     public boolean isExplored(){
@@ -69,8 +69,7 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public void setColor(Color c){
-            this.color = c;
-            setBackground(this.color);
+        this.color = c;
     }
     public void setExplored(){
         this.explored = true;

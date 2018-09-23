@@ -1,7 +1,5 @@
 package object;
 
-import object.RobotDirection.DIRECTION;
-
 public class Sensor {
    /* private final int lowerRange;
     private final int upperRange;

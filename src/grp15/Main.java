@@ -4,7 +4,6 @@ import grp15.algorithm.Explorer;
 import grp15.simulator.MazeEditor;
 import grp15.object.Robot;
 import grp15.simulator.MazeSolver;
-import grp15.util.MapIOProcessor;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -12,9 +11,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import static grp15.object.Cell.GRID_SIZE;
 import static grp15.simulator.MazeEditor.*;
@@ -49,7 +48,7 @@ final public class Main
 
             public void actionPerformed(ActionEvent e) {
                 //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
-                bot = new Robot(1,1);
+                bot = new Robot(MAZE_HEIGHT - 4,1,3);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
@@ -71,28 +70,9 @@ final public class Main
 
         });
 
-        JButton loadMap = new JButton ("Load Map");
-        loadMap.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-                jfc.setDialogTitle("Select a map");
-                jfc.setAcceptAllFileFilterUsed(false);
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt","txt");
-                jfc.addChoosableFileFilter(filter);
-
-                int state = jfc.showOpenDialog(f);
-                if (state == JFileChooser.APPROVE_OPTION)
-                    MapIOProcessor.readMapFileFromDisk(jfc.getSelectedFile(),map);
-
-            }
-
-        });
-        buttonPanel.add(loadMap);
         buttonPanel.add(exploreButton);
         buttonPanel.add(timeSolver);
 
-        contentPane.add(buttonPanel, BorderLayout.SOUTH);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
         contentPane.add(textPanel, BorderLayout.NORTH);
