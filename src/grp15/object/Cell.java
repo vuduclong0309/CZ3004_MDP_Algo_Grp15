@@ -70,6 +70,7 @@ public class Cell extends JPanel implements CellColor{
 
     public void setColor(Color c){
         this.color = c;
+        setBackground(this.color);
     }
     public void setExplored(){
         this.explored = true;
