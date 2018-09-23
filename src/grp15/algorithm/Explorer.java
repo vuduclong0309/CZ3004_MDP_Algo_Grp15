@@ -65,26 +65,28 @@ public class Explorer {
             i++;
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> solution = solver.getDistanceMap();
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
-            int gridIndex = 0;
+            double gridIndex = 0;
             for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: solution.entrySet()){
                 //System.out.println("entry"+entry.toString());
                 int nextPosX = entry.getKey().getKey().getKey();
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
+                int distance = entry.getValue().getKey();
                 int newIndex = falseSense(nextPosX, nextPosY, map.getMazeCell()); // == 0 && !(nextPosX == 1 && nextPosY == 1)) continue;
                 //init = false;
+                if(newIndex == 0) continue;
                 if (nextPosMinDistance == null){
 
                     if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
                         gridIndex = newIndex;
                     }
-                } else if (gridIndex < newIndex){
+                } else if (gridIndex < (double)(newIndex*newIndex)/distance){
                     //System.out.println(nextPosMinDistance.toString());
 
                     if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
-                        gridIndex = newIndex;
+                        gridIndex = (double)(newIndex*newIndex)/distance;
                     }
                 }
             }
@@ -112,7 +114,7 @@ public class Explorer {
                     e.printStackTrace();
                 }
             }
-            if(coverage((MAZE_HEIGHT) * (MAZE_WIDTH), map)) break;
+            //if(coverage((MAZE_HEIGHT) * (MAZE_WIDTH), map)) break;
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(true);
