@@ -55,7 +55,6 @@ public class Explorer {
     }
 
     public void startExploration(){
-
         map.senseMap();
         this.map.repaint();
         int i = 0;
@@ -117,10 +116,10 @@ public class Explorer {
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(true);
-        DijkstraSolver solver2 = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
-        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver2);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1,1), 0)), map);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map);
+        solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4,1), 3)), map);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, MAZE_WIDTH - 4), 3)), map);
         System.out.println("finished");
     }
 

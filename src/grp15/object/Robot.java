@@ -19,9 +19,10 @@ public class Robot {
 
     public Robot(){};
 
-    public Robot(int x, int y){
+    public Robot(int x, int y, int dir){
         this.posX = x;
         this.posY = y;
+        this.direction = dir;
     }
 
     public void moveForward() {

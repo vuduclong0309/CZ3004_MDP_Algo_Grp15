@@ -48,7 +48,7 @@ final public class Main
 
             public void actionPerformed(ActionEvent e) {
                 //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
-                bot = new Robot(1,1);
+                bot = new Robot(MAZE_HEIGHT - 4,1,3);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
