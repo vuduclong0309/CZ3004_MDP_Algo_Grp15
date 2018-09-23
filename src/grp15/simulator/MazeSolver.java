@@ -13,62 +13,92 @@ import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
 public class MazeSolver extends JPanel implements CellColor {
-
-    private Cell[][] mazeCell = new Cell[MAZE_HEIGHT][MAZE_WIDTH];
+    private MazeEditor maze;
     private Robot robot;
 
     public MazeSolver(MazeEditor maze, Robot r) {
         this.robot = r;
-        this.initiate(maze);
+        this.maze = maze;
     }
 
     public void paintComponent(Graphics g)
     {
-        int i, j;
+        //draw grid line
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         g.setColor(Color.WHITE);
         g.fillRect(GRID_SIZE, GRID_SIZE, this.getWidth()-GRID_SIZE*2, this.getHeight()-GRID_SIZE*2);
-        for(j=0; j < MAZE_WIDTH; j++){
+
+        //draw maze wall
+        for(int i = 0; i < MAZE_WIDTH; i++){
             g.setColor(Color.BLACK);
-            g.fillRect((j+1)*GRID_SIZE - 2,0, 2, this.getHeight());
+            g.fillRect((i+1)*GRID_SIZE - 2,0, 2, this.getHeight());
         }
-        for(i=0; i < MAZE_HEIGHT; i++){
+        for(int i = 0; i < MAZE_HEIGHT; i++){
             g.setColor(Color.BLACK);
             g.fillRect(0,(i+1)*GRID_SIZE - 2, this.getWidth(), 2);
         }
 
-        for (i= 0; i < MAZE_HEIGHT; i++) {
-            for (j = 0; j < MAZE_WIDTH; j++) {
-                if(mazeCell[i][j].isExplored()) {
-                    g.setColor(mazeCell[i][j].getColor());
-                    g.fillRect(mazeCell[i][j].getCol()*GRID_SIZE, mazeCell[i][j].getRow()*GRID_SIZE, 30, 30);
+        //draw arena
+        for (int i= 0; i < MAZE_HEIGHT; i++) {
+            for (int j = 0; j < MAZE_WIDTH; j++) {
+                if(maze.getMazeMap()[i][j].isExplored()) {
+                    g.setColor(maze.getMazeMap()[i][j].getColor());
+                } else{
+                    g.setColor(Color.GRAY);
                 }
+                g.fillRect(maze.getMazeMap()[i][j].getCol()*GRID_SIZE,maze.getMazeMap()[i][j].getRow()*GRID_SIZE,30, 30);
             }
         }
 
 
+        //robot
+
+        g.setColor(ROBOT_BODY);
+        g.fillRect(this.robot.getPosY()*GRID_SIZE, this.robot.getPosX()*GRID_SIZE, 96, 96);
+
+        switch (this.robot.getDirection()){
+            case NORTH: g.setColor(ROBOT_HEAD);
+                g.fillRect(this.robot.getPosY()*GRID_SIZE, (this.robot.getPosX()+1)*GRID_SIZE, 30, 30);
+                break;
+            case SOUTH: g.setColor(ROBOT_HEAD);
+                g.fillRect((this.robot.getPosY()+2)*GRID_SIZE, (this.robot.getPosX()+1)*GRID_SIZE, 30, 30);
+                break;
+            case EAST: 	g.setColor(ROBOT_HEAD);
+                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, (this.robot.getPosX()+2)*GRID_SIZE, 30, 30);
+                break;
+            case WEST:  g.setColor(ROBOT_HEAD);
+                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, this.robot.getPosX()*GRID_SIZE, 30, 30);
+                break;
+        }
     }
 
-    private void initiate(MazeEditor map) {
-        for (int i = 0; i < MAZE_HEIGHT; i++) {
-            for (int j = 0; j < MAZE_WIDTH; j++) {
-                mazeCell[i][j] = new Cell(i, j);
-                this.mazeCell[i][j].setColor(map.getMazeMap()[i][j].getColor());
-                if (i==0 || i== MAZE_HEIGHT -1 || j==0 || j == MAZE_WIDTH - 1){
-                    this.mazeCell[i][j].setExplored();
-                }
-            }
-        }
+    public void senseMap(){
+        int posX = robot.getPosX(), posY = robot.getPosY();
+        maze.getMazeMap()[posX-1][posY].setExplored();
+        maze.getMazeMap()[posX-1][posY+1].setExplored();
+        maze.getMazeMap()[posX-1][posY+2].setExplored();
+        maze.getMazeMap()[posX+3][posY].setExplored();
+        maze.getMazeMap()[posX+3][posY+1].setExplored();
+        maze.getMazeMap()[posX+3][posY+2].setExplored();
+        maze.getMazeMap()[posX][posY-1].setExplored();
+        maze.getMazeMap()[posX+1][posY-1].setExplored();
+        maze.getMazeMap()[posX+2][posY-1].setExplored();
+        maze.getMazeMap()[posX][posY+3].setExplored();
+        maze.getMazeMap()[posX+1][posY+3].setExplored();
+        maze.getMazeMap()[posX+2][posY+3].setExplored();
     }
 
     public Cell explorePosition(int x, int y){
-        mazeCell[x][y].setExplored();
-        return mazeCell[x][y];
+        maze.getMazeMap()[x][y].setExplored();
+        return maze.getMazeMap()[x][y];
     }
 
     public Cell[][] getMazeCell() {
-        return mazeCell;
+        return maze.getMazeMap();
     }
 
+    public Robot getRobot() {
+        return robot;
+    }
 }

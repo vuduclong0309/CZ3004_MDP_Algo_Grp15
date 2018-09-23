@@ -1,6 +1,6 @@
 package grp15;
 
-import algorithm.Explorer;
+import grp15.algorithm.Explorer;
 import grp15.simulator.MazeEditor;
 import grp15.object.Robot;
 import grp15.simulator.MazeSolver;
@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import static grp15.object.Cell.GRID_SIZE;
+import static grp15.simulator.MazeEditor.*;
+
 
 final public class Main
 {
@@ -26,7 +29,7 @@ final public class Main
     {
         JFrame f = new JFrame();
         f.setTitle("Map editor ");
-        f.setSize(new Dimension(700,800));
+        f.setSize(new Dimension(MAZE_WIDTH*GRID_SIZE,MAZE_HEIGHT*GRID_SIZE));
         f.setResizable(false);
 
         map = new MazeEditor();
@@ -45,10 +48,10 @@ final public class Main
 
             public void actionPerformed(ActionEvent e) {
                 //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
-                bot = new Robot(1,1);
+                bot = new Robot(MAZE_HEIGHT - 4,1,3);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
-                Explorer exp = new Explorer(bot, mapSolver);
+                Explorer exp = new Explorer(mapSolver);
                 System.out.println("Explorer created!");
                 exp.launch();
 

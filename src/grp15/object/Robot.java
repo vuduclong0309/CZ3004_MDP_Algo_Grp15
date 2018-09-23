@@ -1,18 +1,28 @@
 package grp15.object;
 
 public class Robot {
-    public static final int NORTH = 1;
-    public static final int SOUTH = 2;
-    public static final int EAST = 3;
-    public static final int WEST = 4;
+    public static final int NORTH = 0;
+    public static final int SOUTH = 1;
+    public static final int EAST = 2;
+    public static final int WEST = 3;
+
+    public static final int MOVE_FORWARD = 5;
+    public static final int TURN_LEFT = 6;
+    public static final int TURN_RIGHT = 7;
+    public static final int STOP = 8;
+
+    public static final int TURN_COST = 1;
+    public static final int MOVE_COST = 1;
+
     private int posX, posY;
     private int direction = NORTH;
 
     public Robot(){};
 
-    public Robot(int x, int y){
+    public Robot(int x, int y, int dir){
         this.posX = x;
         this.posY = y;
+        this.direction = dir;
     }
 
     public void moveForward() {
@@ -69,6 +79,24 @@ public class Robot {
     public void turnBack() {
         this.turnLeft();
         this.turnLeft();
+    }
+
+    public void moveRobot(int signal){
+        switch (signal){
+            case MOVE_FORWARD:
+                this.moveForward();
+                break;
+            case TURN_LEFT:
+                this.turnLeft();
+                break;
+            case TURN_RIGHT:
+                this.turnRight();
+                break;
+        }
+    }
+
+    public RobotOrientation getOrientation(){
+        return new RobotOrientation(this);
     }
 
     public int getDirection() {
