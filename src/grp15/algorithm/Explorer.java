@@ -39,7 +39,7 @@ public class Explorer {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.getContentPane().add(BorderLayout.CENTER, map);
                 frame.setResizable(false);
-                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+2), MAZE_HEIGHT * (GRID_SIZE+2)));
+                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+1), MAZE_HEIGHT * (GRID_SIZE+2)));
                 //setting the window location
                 frame.setLocationByPlatform(false);
                 frame.setLocation(0, 0);
@@ -120,8 +120,8 @@ public class Explorer {
         }while(true);
         solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4,1), 3)), map);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, MAZE_WIDTH - 4), 3)), map);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map);
         System.out.println("finished");
     }
 
