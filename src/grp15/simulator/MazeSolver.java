@@ -103,6 +103,14 @@ public class MazeSolver extends JPanel implements CellColor {
         return robot;
     }
 
+    public double coverage(){
+        int cnt = 0;
+        for(int i = 1; i < MAZE_HEIGHT - 1;i++){
+            for(int j = 1;j < MAZE_WIDTH - 1; j++) if(maze.getMazeMap()[i][j].isExplored()) cnt++;
+        }
+        return (double)cnt/((MAZE_WIDTH -2)*(MAZE_HEIGHT -2));
+    }
+
     public boolean isValidPosition(int row, int col) {
         return maze.isValidPosition(row, col);
     }

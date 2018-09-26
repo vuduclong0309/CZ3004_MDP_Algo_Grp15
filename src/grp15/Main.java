@@ -69,7 +69,25 @@ final public class Main
         timeSolver.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog("Time in sec:",null);
+                time=(Integer.parseInt(input)*1000);
 
+                bot = new Robot(1,1,0);
+                System.out.println("bot created!");
+                mapSolver = new MazeSolver(map, bot);
+                Explorer exp = new Explorer(mapSolver);
+                System.out.println("Explorer created!");
+
+                //the timer that is being used
+                ActionListener actionListener = new ActionListener() {
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        exp.timeup();
+                    }
+                };
+                Timer timer = new Timer( time / Explorer.SPEED, actionListener );
+                timer.setRepeats(false);
+                timer.start();
+                exp.launch();
             }
 
         });

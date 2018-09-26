@@ -18,15 +18,13 @@ import static grp15.object.Robot.isValidPosition;
 public class Explorer {
     public static int WAYPOINT_X = 5;
     public static int WAYPOINT_Y = 15;
-    static final int SPEED = 10;
+    public static int SPEED = 10;
     static DijkstraSolver solver;
-    private static MazeSolver map;
+    private MazeSolver map;
     private JFrame frame;
-    private boolean reachedGoal = false;
-    private int time = 360;
-    private boolean stopFlag = true;
-    private boolean interrupted;
+
     boolean visited [][][] = new boolean[MAZE_HEIGHT][MAZE_WIDTH][4];
+    private boolean timeout = false;
 
     public Explorer(MazeSolver m) {
         this.map = m;
@@ -62,6 +60,7 @@ public class Explorer {
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
         solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        System.out.println(map.coverage());
         do{
             System.out.println("iteration"+i);
             i++;
@@ -114,10 +113,12 @@ public class Explorer {
                     e.printStackTrace();
                 }
             }
-            //if(coverage((MAZE_HEIGHT) * (MAZE_WIDTH), map)) break;
+            if(map.coverage() > 0.9){
+                break;
+            }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(true);
+        }while(timeout == false);
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
         pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
 
@@ -164,11 +165,7 @@ public class Explorer {
         return res;
     }
 
-    boolean coverage(int limit, MazeSolver maze){
-        int cnt = 0;
-        for(int i = 1; i < MAZE_HEIGHT; i++){
-            for(int j = 1; j< MAZE_WIDTH; j++) if(maze.getMazeCell()[i][j].isExplored() == false) return false;
-        }
-        return true;
+    public void timeup(){
+        this.timeout = true;
     }
 }
