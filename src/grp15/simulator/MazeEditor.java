@@ -1,5 +1,6 @@
 package grp15.simulator;
 
+import grp15.algorithm.Explorer;
 import grp15.object.Cell;
 import grp15.object.CellColor;
 
@@ -13,10 +14,13 @@ public class MazeEditor extends JPanel implements CellColor {
     private JPanel[][] mapGUI = new JPanel[MAZE_HEIGHT][MAZE_WIDTH];
     private Cell[][] mazeMap = new Cell[MAZE_HEIGHT][MAZE_WIDTH];
 
-    public MazeEditor(){ initiate(); };
+    public MazeEditor(){
+        initiate();
+        mazeMap[Explorer.WAYPOINT_X][Explorer.WAYPOINT_Y].setColor(WAYPOINT);
+    };
     protected void initiate() {
         this.setLayout(new GridLayout(MAZE_HEIGHT, MAZE_WIDTH));
-        for (int i = 0; i < MAZE_HEIGHT; i++) {
+        for (int i = MAZE_HEIGHT - 1; i >= 0; i--) {
             for (int j = 0; j < MAZE_WIDTH; j++) {
                 mazeMap[i][j] = new Cell(i, j);
                 if(i==0 || j == 0 || i == MAZE_HEIGHT - 1 || j == MAZE_WIDTH - 1) mazeMap[i][j].setExplored();
@@ -39,5 +43,9 @@ public class MazeEditor extends JPanel implements CellColor {
 
     public Cell[][] getMazeMap(){
         return this.mazeMap;
+    }
+
+    public static boolean isValidPosition(int row, int col) {
+        return row >= 0 && col >= 0 && row < MAZE_HEIGHT && col < MAZE_WIDTH;
     }
 }
