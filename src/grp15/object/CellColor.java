@@ -25,7 +25,7 @@ public interface CellColor {
     static final Color ROBOT_BODY = Color.GRAY;
 
     //explore path
-    static final Color PATH = Color.MAGENTA;
+    static final Color WAYPOINT = Color.MAGENTA;
 
     //shortest path
     static final Color SPATH = Color.CYAN;

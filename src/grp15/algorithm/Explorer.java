@@ -1,8 +1,6 @@
 package grp15.algorithm;
 
-import grp15.algorithm.DijkstraSolver;
 import grp15.object.Cell;
-import grp15.object.Robot;
 import grp15.object.RobotOrientation;
 import grp15.simulator.MazeSolver;
 import javafx.util.Pair;
@@ -11,22 +9,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static grp15.object.Cell.GRID_SIZE;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
 public class Explorer {
+    public static double COVERAGE_THRESHOLD = 0.95;
+    public static int WAYPOINT_X = 5;
+    public static int WAYPOINT_Y = 15;
+    public static int SPEED = 10;
     static DijkstraSolver solver;
-    private static MazeSolver map;
+    private MazeSolver map;
     private JFrame frame;
-    private boolean reachedGoal = false;
-    private int time = 360;
-    private boolean stopFlag = true;
-    private boolean interrupted;
+
     boolean visited [][][] = new boolean[MAZE_HEIGHT][MAZE_WIDTH][4];
+    private boolean timeout = false;
 
     public Explorer(MazeSolver m) {
         this.map = m;
@@ -59,14 +57,17 @@ public class Explorer {
         this.map.repaint();
         int i = 0;
         boolean init = true;
+        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
+
+        solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        System.out.println(map.coverage());
         do{
-            solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
             System.out.println("iteration"+i);
             i++;
-            HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> solution = solver.getDistanceMap();
+            distanceMap = solver.getDistanceMap();
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             double gridIndex = 0;
-            for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: solution.entrySet()){
+            for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: distanceMap.entrySet()){
                 //System.out.println("entry"+entry.toString());
                 int nextPosX = entry.getKey().getKey().getKey();
                 int nextPosY = entry.getKey().getKey().getValue();
@@ -96,7 +97,7 @@ public class Explorer {
                 break;
             }
             //System.out.println(solution.get(new RobotOrientation(robot).toPairFormat()));
-            ArrayList<Integer> path = solver.getPathFromDistanceMap(solution, new RobotOrientation(solver.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
+            ArrayList<Integer> path = solver.getPathFromDistanceMap(distanceMap, new RobotOrientation(solver.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
             visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
             for(int j = 0; j < path.size(); j++){
                 System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + path.get(j));
@@ -104,24 +105,46 @@ public class Explorer {
                 map.senseMap();
                 //for(int k=1;k<=100;k++) System.out.println("pause thread");
                 this.map.repaint();
-                for(int k = 0; k < 4; k++) {
-                    visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
-                }
+                visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
                 try {
-                    Thread.sleep(1000/10);
+                    Thread.sleep(1000/SPEED);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
-            //if(coverage((MAZE_HEIGHT) * (MAZE_WIDTH), map)) break;
+            if(map.coverage() > COVERAGE_THRESHOLD){
+                break;
+            }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(true);
-        solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        }while(timeout == false);
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
+
+        distanceMap = solver.getDistanceMap();
+
+        HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
+        int minDistance = 10000;
+        for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: distanceMap.entrySet()){
+        //System.out.println("entry"+entry.toString());
+            int nextPosX = entry.getKey().getKey().getKey();
+            int nextPosY = entry.getKey().getKey().getValue();
+            int direction = entry.getKey().getValue();
+            int distance = entry.getValue().getKey();
+            int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
+            boolean isWayPoint = (dx <= 0) && (dx >= -2) && (dy <= 0) && (dy >= -2);
+            if(isWayPoint == false) continue;
+            if (minDistance > distance){
+            //System.out.println(nextPosMinDistance.toString());
+                nextPosMinDistance = entry;
+                minDistance = distance;
+            }
+        }
+
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(nextPosMinDistance.getKey()), map, true);
+
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map, true);
         System.out.println("finished");
     }
 
@@ -142,11 +165,11 @@ public class Explorer {
         return res;
     }
 
-    boolean coverage(int limit, MazeSolver maze){
-        int cnt = 0;
-        for(int i = 1; i < MAZE_HEIGHT; i++){
-            for(int j = 1; j< MAZE_WIDTH; j++) if(maze.getMazeCell()[i][j].isExplored() == false) return false;
-        }
-        return true;
+    public void timeup(){
+        this.timeout = true;
+    }
+
+    public static void setCoverageThreshold (double d){
+        COVERAGE_THRESHOLD = d;
     }
 }

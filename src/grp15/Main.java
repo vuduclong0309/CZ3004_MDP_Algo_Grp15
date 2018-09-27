@@ -22,6 +22,10 @@ import static grp15.simulator.MazeEditor.*;
 
 final public class Main
 {
+    int WAYPOINT_X = Explorer.WAYPOINT_X;
+    int WAYPOINT_Y = Explorer.WAYPOINT_Y;
+
+    private static double limit = 1;
     private static MazeEditor map;
     private static MazeSolver mapSolver;
     private static Robot bot;
@@ -49,10 +53,11 @@ final public class Main
 
             public void actionPerformed(ActionEvent e) {
                 //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
-                bot = new Robot(MAZE_HEIGHT - 4,1,3);
+                bot = new Robot(1,1,0);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
+                exp.setCoverageThreshold(limit);
                 System.out.println("Explorer created!");
                 exp.launch();
 
@@ -66,7 +71,26 @@ final public class Main
         timeSolver.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog("Time in sec:",null);
+                time=(Integer.parseInt(input)*1000);
 
+                bot = new Robot(1,1,0);
+                System.out.println("bot created!");
+                mapSolver = new MazeSolver(map, bot);
+                Explorer exp = new Explorer(mapSolver);
+                exp.setCoverageThreshold(limit);
+                System.out.println("Explorer created!");
+
+                //the timer that is being used
+                ActionListener actionListener = new ActionListener() {
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        exp.timeup();
+                    }
+                };
+                Timer timer = new Timer( time / Explorer.SPEED, actionListener );
+                timer.setRepeats(false);
+                timer.start();
+                exp.launch();
             }
 
         });
@@ -88,9 +112,20 @@ final public class Main
             }
 
         });
+
+        JButton percentage = new JButton ("Set Percentage");
+        percentage.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog("Exploration %:",null);
+                int in=Integer.parseInt(input);
+                limit = (double) in/100;
+            }
+
+        });
+
         buttonPanel.add(loadMap);
-
-
+        buttonPanel.add(percentage);
         buttonPanel.add(exploreButton);
         buttonPanel.add(timeSolver);
 

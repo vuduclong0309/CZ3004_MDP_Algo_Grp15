@@ -45,11 +45,11 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public boolean isStart() {
-        return (this.row >= MAZE_HEIGHT - 4 && this.col<=3);
+        return (this.row <= 3 && this.col<=3);
     }
 
     public boolean isGoal() {
-        return (this.col>= MAZE_WIDTH - 4 && this.row <= 3);
+        return (this.col>= MAZE_WIDTH - 4 && this.row >= MAZE_HEIGHT - 4);
     }
 
     public boolean isExplored(){

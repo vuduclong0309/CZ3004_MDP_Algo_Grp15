@@ -23,13 +23,13 @@ public class MazeSolver extends JPanel implements CellColor {
 
     public void paintComponent(Graphics g)
     {
-        //draw grid line
+        //draw arena background (wall)
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         g.setColor(Color.WHITE);
         g.fillRect(GRID_SIZE, GRID_SIZE, this.getWidth()-GRID_SIZE*2, this.getHeight()-GRID_SIZE*2);
 
-        //draw maze wall
+        //draw grid line
         for(int i = 0; i < MAZE_WIDTH; i++){
             g.setColor(Color.BLACK);
             g.fillRect((i+1)*GRID_SIZE - 2,0, 2, this.getHeight());
@@ -47,7 +47,7 @@ public class MazeSolver extends JPanel implements CellColor {
                 } else{
                     g.setColor(Color.GRAY);
                 }
-                g.fillRect(maze.getMazeMap()[i][j].getCol()*GRID_SIZE,maze.getMazeMap()[i][j].getRow()*GRID_SIZE,30, 30);
+                g.fillRect(maze.getMazeMap()[i][j].getCol()*GRID_SIZE,(MAZE_HEIGHT - 1 - maze.getMazeMap()[i][j].getRow())*GRID_SIZE,30, 30);
             }
         }
 
@@ -55,26 +55,27 @@ public class MazeSolver extends JPanel implements CellColor {
         //robot
 
         g.setColor(ROBOT_BODY);
-        g.fillRect(this.robot.getPosY()*GRID_SIZE, this.robot.getPosX()*GRID_SIZE, 96, 96);
+        g.fillRect(this.robot.getPosY()*GRID_SIZE, (MAZE_HEIGHT - 1 - 2 - this.robot.getPosX())*GRID_SIZE, 96, 96);
 
         switch (this.robot.getDirection()){
-            case NORTH: g.setColor(ROBOT_HEAD);
-                g.fillRect(this.robot.getPosY()*GRID_SIZE, (this.robot.getPosX()+1)*GRID_SIZE, 30, 30);
+            case NORTH: 	g.setColor(ROBOT_HEAD);
+                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, (MAZE_HEIGHT - 1 - (this.robot.getPosX()+2))*GRID_SIZE, 30, 30);
                 break;
-            case SOUTH: g.setColor(ROBOT_HEAD);
-                g.fillRect((this.robot.getPosY()+2)*GRID_SIZE, (this.robot.getPosX()+1)*GRID_SIZE, 30, 30);
+            case SOUTH:  g.setColor(ROBOT_HEAD);
+                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, (MAZE_HEIGHT - 1 - this.robot.getPosX())*GRID_SIZE, 30, 30);
                 break;
-            case EAST: 	g.setColor(ROBOT_HEAD);
-                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, (this.robot.getPosX()+2)*GRID_SIZE, 30, 30);
+            case EAST: g.setColor(ROBOT_HEAD);
+                g.fillRect((this.robot.getPosY()+2)*GRID_SIZE, (MAZE_HEIGHT - 1 - (this.robot.getPosX()+1))*GRID_SIZE, 30, 30);
                 break;
-            case WEST:  g.setColor(ROBOT_HEAD);
-                g.fillRect((this.robot.getPosY()+1)*GRID_SIZE, this.robot.getPosX()*GRID_SIZE, 30, 30);
+            case WEST: g.setColor(ROBOT_HEAD);
+                g.fillRect(this.robot.getPosY()*GRID_SIZE, (MAZE_HEIGHT - 1 - (this.robot.getPosX()+1))*GRID_SIZE, 30, 30);
                 break;
         }
     }
 
     public void senseMap(){
-        int posX = robot.getPosX(), posY = robot.getPosY();
+        this.robot.getSensorData(this);
+        /*int posX = robot.getPosX(), posY = robot.getPosY();
         maze.getMazeMap()[posX-1][posY].setExplored();
         maze.getMazeMap()[posX-1][posY+1].setExplored();
         maze.getMazeMap()[posX-1][posY+2].setExplored();
@@ -86,7 +87,7 @@ public class MazeSolver extends JPanel implements CellColor {
         maze.getMazeMap()[posX+2][posY-1].setExplored();
         maze.getMazeMap()[posX][posY+3].setExplored();
         maze.getMazeMap()[posX+1][posY+3].setExplored();
-        maze.getMazeMap()[posX+2][posY+3].setExplored();
+        maze.getMazeMap()[posX+2][posY+3].setExplored();*/
     }
 
     public Cell explorePosition(int x, int y){
@@ -100,5 +101,17 @@ public class MazeSolver extends JPanel implements CellColor {
 
     public Robot getRobot() {
         return robot;
+    }
+
+    public double coverage(){
+        int cnt = 0;
+        for(int i = 1; i < MAZE_HEIGHT - 1;i++){
+            for(int j = 1;j < MAZE_WIDTH - 1; j++) if(maze.getMazeMap()[i][j].isExplored()) cnt++;
+        }
+        return (double)cnt/((MAZE_WIDTH -2)*(MAZE_HEIGHT -2));
+    }
+
+    public boolean isValidPosition(int row, int col) {
+        return maze.isValidPosition(row, col);
     }
 }

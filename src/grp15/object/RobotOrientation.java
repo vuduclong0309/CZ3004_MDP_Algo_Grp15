@@ -41,16 +41,16 @@ public class RobotOrientation {
     public RobotOrientation moveForward() {
         switch (this.direction) {
             case NORTH:
-                this.posY--;
-                break;
-            case SOUTH:
-                this.posY++;
-                break;
-            case EAST:
                 this.posX++;
                 break;
-            case WEST:
+            case SOUTH:
                 this.posX--;
+                break;
+            case EAST:
+                this.posY++;
+                break;
+            case WEST:
+                this.posY--;
                 break;
         }
         return this;
