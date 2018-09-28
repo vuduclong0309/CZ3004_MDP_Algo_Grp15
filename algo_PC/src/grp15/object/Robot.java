@@ -173,34 +173,34 @@ public class Robot {
         boolean wall[] = new boolean[3];
         wall[0] = true; wall[1] = true; wall[2] = false;
         int i;
-        for (i = sensorRShortest; i <= this.sensorRLongest; i++) {
+        for (i = 1; i <= this.sensorRLongest; i++) {
             for(int j = 0; j < 3; j++) {
                 if(wall[j] == true) continue;
                 switch (this.direction) {
                     case WEST:
                         if (this.posX + 2 + i <= MAZE_HEIGHT - 1) {
-                            map.getMazeCell()[this.posX + 2 + i][this.posY + j].setExplored();
+                            if(i >= sensorRShortest) map.getMazeCell()[this.posX + 2 + i][this.posY + j].setExplored();
                             wall[j] = map.getMazeCell()[this.posX + 2 + i][this.posY + j].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case EAST:
                         if (this.posX - i >= 0) {
-                            map.getMazeCell()[this.posX - i][this.posY + j].setExplored();
+                            if(i >= sensorRShortest) map.getMazeCell()[this.posX - i][this.posY + j].setExplored();
                             wall[j] = map.getMazeCell()[this.posX - i][this.posY + j].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case NORTH:
                         if (this.posY + 2 + i <= MAZE_WIDTH - 1) {
-                            map.getMazeCell()[this.posX + j][this.posY + 2 + i].setExplored();
+                            if(i >= sensorRShortest) map.getMazeCell()[this.posX + j][this.posY + 2 + i].setExplored();
                             wall[j] = map.getMazeCell()[this.posX + j][this.posY + 2 + i].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case SOUTH:
                         if (this.posY - i > 0) {
-                            map.getMazeCell()[this.posX + j][this.posY - i].setExplored();
+                            if(i >= sensorRShortest) map.getMazeCell()[this.posX + j][this.posY - i].setExplored();
                             wall[j] = map.getMazeCell()[this.posX + j][this.posY - i].isBlocked();
                         } else
                             wall[j] = true;
