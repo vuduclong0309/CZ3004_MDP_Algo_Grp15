@@ -24,12 +24,12 @@ final public class Main
 {
     int WAYPOINT_X = Explorer.WAYPOINT_X;
     int WAYPOINT_Y = Explorer.WAYPOINT_Y;
-
     private static MazeEditor map;
     private static MazeSolver mapSolver;
     private static Robot bot;
     private static int time;
     static double coverage = 1;
+    static int speed = 10;
     public static void main(String[] args)
     {
         JFrame f = new JFrame();
@@ -58,6 +58,7 @@ final public class Main
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
                 exp.setCoverageThreshold(coverage);
+                exp.setSpeed(speed);
                 System.out.println("Explorer created!");
                 exp.launch();
 
@@ -79,6 +80,7 @@ final public class Main
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
                 exp.setCoverageThreshold(coverage);
+                exp.setSpeed(speed);
                 System.out.println("Explorer created!");
 
                 //the timer that is being used
@@ -128,6 +130,19 @@ final public class Main
 
         });
 
+        JButton speedButton = new JButton ("Set Speed");
+        speedButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog("Speed:", null);
+                speed = Integer.parseInt(input);
+                System.out.println("Speed set!");
+
+            }
+
+        });
+
+        buttonPanel.add(speedButton);
         buttonPanel.add(percentage);
         buttonPanel.add(loadMap);
         buttonPanel.add(exploreButton);

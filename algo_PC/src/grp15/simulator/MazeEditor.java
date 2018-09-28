@@ -31,10 +31,10 @@ public class MazeEditor extends JPanel implements CellColor {
         }
     }
     public void updateLoadedMap(char[][] mapEncoding) {
-        for (int i = 0; i < MAZE_HEIGHT ; i++) {
-            for (int j = 0; j < MAZE_WIDTH; j++) {
+        for (int i = 0; i < MAZE_HEIGHT - 2; i++) {
+            for (int j = 0; j < MAZE_WIDTH - 2; j++) {
                 if (mapEncoding[i][j] == '1') {
-                    mazeMap[i][j].setColor(BLOCKED);
+                    mazeMap[i+1][j+1].setColor(BLOCKED);
                 }
             }
         }

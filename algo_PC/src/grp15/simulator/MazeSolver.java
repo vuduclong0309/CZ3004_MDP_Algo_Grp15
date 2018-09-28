@@ -73,6 +73,10 @@ public class MazeSolver extends JPanel implements CellColor {
         }
     }
 
+    public Cell getCell(int row, int col){
+        return this.maze.getMazeMap()[row][col];
+    }
+
     public void senseMap(){
         this.robot.getSensorData(this);
         /*int posX = robot.getPosX(), posY = robot.getPosY();

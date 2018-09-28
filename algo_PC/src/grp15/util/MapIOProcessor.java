@@ -6,14 +6,14 @@ import grp15.simulator.MazeEditor;
 
 
 public class MapIOProcessor {
-	/* 
+	/*
 	 * Reads input text file from storage that uses binary to indicate if a cell on the arena is an obstacle.
 	 * */
 	public static void readMapFileFromDisk(File file, MazeEditor mz) {
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(file));
 
-			char[][] mapEncoding = new char[22][17];
+			char[][] mapEncoding = new char[20][15];
 			int value = 0;
 			int rowPtr = 0;
 			int colPtr = 0;
@@ -22,14 +22,14 @@ public class MapIOProcessor {
 				mapEncoding[rowPtr][colPtr] = binData;
 
                 colPtr++;
-				if (colPtr == 17) {
+				if (colPtr == 15) {
 					colPtr = 0;
 					rowPtr++;
 				}
-				if (rowPtr == 22)
+				if (rowPtr == 20)
 					break;
 			}
-			
+
 			bf.close();
 			mz.updateLoadedMap(mapEncoding);
 
@@ -39,15 +39,15 @@ public class MapIOProcessor {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*
 	 * Convert binary to hexadecimal representation to be displayed
 	 */
 	public static String binToHex(String value) {
 		int deci = 0;
-		
+
 		try {
-	
+
 			deci = Integer.parseInt(value, 2);
 		}
 		catch (Exception e) {
