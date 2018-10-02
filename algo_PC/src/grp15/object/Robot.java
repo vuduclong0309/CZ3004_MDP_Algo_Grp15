@@ -3,6 +3,8 @@ package grp15.object;
 import grp15.simulator.MazeEditor;
 import grp15.simulator.MazeSolver;
 
+import java.util.ArrayList;
+
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
@@ -17,12 +19,12 @@ public class Robot {
     public static final int TURN_RIGHT = 7;
     public static final int STOP = 8;
 
-    private int sensorFShortest = 1;
-    private int sensorFLongest = 3;
-    private int sensorLShortest = 1;
-    private int sensorLLongest = 3;
-    private int sensorRShortest = 2;
-    private int sensorRLongest = 5;
+    public static int sensorFShortest = 1;
+    public static int sensorFLongest = 2;
+    public static int sensorLShortest = 1;
+    public static int sensorLLongest = 2;
+    public static int sensorRShortest = 2;
+    public static int sensorRLongest = 5;
 
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
@@ -214,7 +216,7 @@ public class Robot {
         //this part goes according to position and number of sensors
         //we have 1 left short sensor at the back left
         boolean wall[] = new boolean[3];
-        wall[0] = false; wall[1] = true; wall[2] = true;
+        wall[0] = false; wall[1] = true; wall[2] = false;
         int i;
         for (i = sensorLShortest; i <= this.sensorLLongest; i++) {
             for(int j = 0; j < 3; j++) {

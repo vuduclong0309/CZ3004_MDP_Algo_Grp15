@@ -58,6 +58,25 @@ public class Explorer {
         this.map.repaint();
         int i = 0;
         boolean init = true;
+        LeftWallHuggingSolver wallHuggingSolver = new LeftWallHuggingSolver(map.getMazeCell(), this.map.getRobot());
+        do{
+            ArrayList<Integer> path = wallHuggingSolver.getMove();
+            for(int j = 0; j < path.size(); j++){
+                visited[wallHuggingSolver.getRobot().getPosX()][wallHuggingSolver.getRobot().getPosY()][wallHuggingSolver.getRobot().getDirection()] = true;
+                System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
+                map.getRobot().moveRobot(path.get(j));
+                map.senseMap();
+                //for(int k=1;k<=100;k++) System.out.println("pause thread");
+                this.map.repaint();
+                try {
+                    Thread.sleep(1000/SPEED);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }while(visited[this.map.getRobot().getPosX()][this.map.getRobot().getPosY()][this.map.getRobot().getDirection()] == false);
+        System.out.println("done");
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
         solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
@@ -74,7 +93,7 @@ public class Explorer {
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
-                int newIndex = falseSense(nextPosX, nextPosY, map.getMazeCell()); // == 0 && !(nextPosX == 1 && nextPosY == 1)) continue;
+                int newIndex = falseSense(nextPosX, nextPosY, direction, map.getMazeCell()); // == 0 && !(nextPosX == 1 && nextPosY == 1)) continue;
                 //init = false;
                 if(newIndex == 0) continue;
                 if (nextPosMinDistance == null){
@@ -153,9 +172,9 @@ public class Explorer {
         }
     }
 
-    int falseSense(int posX, int posY, Cell[][] maze){
+    int falseSense(int posX, int posY, int direction, Cell[][] maze){
         int res = 0;
-        if(!maze[posX-1][posY].isExplored()) res++;
+        /*if(!maze[posX-1][posY].isExplored()) res++;
         if(!maze[posX-1][posY+1].isExplored()) res++;
         if(!maze[posX-1][posY+2].isExplored()) res++;
         if(!maze[posX+3][posY].isExplored()) res++;
@@ -166,7 +185,8 @@ public class Explorer {
         if(!maze[posX+2][posY-1].isExplored()) res++;
         if(!maze[posX][posY+3].isExplored()) res++;
         if(!maze[posX+1][posY+3].isExplored()) res++;
-        if(!maze[posX+2][posY+3].isExplored()) res++;
+        if(!maze[posX+2][posY+3].isExplored()) res++;*/
+        res = new RobotOrientation(posX, posY, direction).falseSenseSensorData(map);
         return res;
     }
 
