@@ -174,7 +174,7 @@ public class Robot {
         SHORT_RANGE_FRONT_RIGHT.physicalSense(map, result[2]);
         LONG_RANGE_RIGHT.physicalSense(map, result[3]);
         SHORT_RANGE_LEFT_FRONT.physicalSense(map, result[4]);
-        SHORT_RANGE_LEFT_BACK.physicalSense(map, result[%]);
+        SHORT_RANGE_LEFT_BACK.physicalSense(map, result[5]);
 
     }
 
