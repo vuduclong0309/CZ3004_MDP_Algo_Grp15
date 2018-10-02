@@ -26,6 +26,13 @@ public class Robot {
     private int L_SENSOR_LOWER_RANGE_VALUE = 2;
     private int L_SENSOR_UPPER_RANGE_VALUE = 5;
 
+    public static int sensorFShortest = 1;
+    public static int sensorFLongest = 3;
+    public static int sensorLShortest = 1;
+    public static int sensorLLongest = 3;
+    public static int sensorRShortest = 2;
+    public static int sensorRLongest = 5;
+
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
 

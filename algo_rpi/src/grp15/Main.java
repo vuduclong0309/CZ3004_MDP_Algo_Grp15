@@ -24,12 +24,12 @@ final public class Main
 {
     int WAYPOINT_X = Explorer.WAYPOINT_X;
     int WAYPOINT_Y = Explorer.WAYPOINT_Y;
-
-    private static double limit = 1;
     private static MazeEditor map;
     private static MazeSolver mapSolver;
     private static Robot bot;
     private static int time;
+    static double coverage = 1;
+    static int speed = 10;
     public static void main(String[] args)
     {
         JFrame f = new JFrame();
@@ -57,7 +57,8 @@ final public class Main
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
-                exp.setCoverageThreshold(limit);
+                exp.setCoverageThreshold(coverage);
+                exp.setSpeed(speed);
                 System.out.println("Explorer created!");
                 exp.launch();
 
@@ -78,7 +79,8 @@ final public class Main
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
                 Explorer exp = new Explorer(mapSolver);
-                exp.setCoverageThreshold(limit);
+                exp.setCoverageThreshold(coverage);
+                exp.setSpeed(speed);
                 System.out.println("Explorer created!");
 
                 //the timer that is being used
@@ -113,19 +115,36 @@ final public class Main
 
         });
 
+        // percentage solver
+
         JButton percentage = new JButton ("Set Percentage");
         percentage.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                String input = JOptionPane.showInputDialog("Exploration %:",null);
-                int in=Integer.parseInt(input);
-                limit = (double) in/100;
+                String input = JOptionPane.showInputDialog("Exploration %:", null);
+                coverage = Double.parseDouble(input);
+
+                System.out.println("Percentage created!");
+
             }
 
         });
 
-        buttonPanel.add(loadMap);
+        JButton speedButton = new JButton ("Set Speed");
+        speedButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog("Speed:", null);
+                speed = Integer.parseInt(input);
+                System.out.println("Speed set!");
+
+            }
+
+        });
+
+        buttonPanel.add(speedButton);
         buttonPanel.add(percentage);
+        buttonPanel.add(loadMap);
         buttonPanel.add(exploreButton);
         buttonPanel.add(timeSolver);
 
