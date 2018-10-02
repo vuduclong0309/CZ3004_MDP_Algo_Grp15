@@ -5,6 +5,7 @@ import grp15.simulator.MazeEditor;
 import grp15.simulator.MazeSolver;
 import grp15.object.Sensor;
 
+import static grp15.algorithm.Explorer.communicator;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
@@ -107,16 +108,18 @@ public class Robot {
     }
 
     public void moveRobot(int signal){
-        Comms communicator = Comms.getComm();
         switch (signal){
             case MOVE_FORWARD:
-                communicator.sendMsg("w", "instr");
+                communicator.sendMsg("w", "INSTR");
+                moveForward();
                 break;
             case TURN_LEFT:
-                communicator.sendMsg("a", "instr");
+                communicator.sendMsg("a", "INSTR");
+                turnLeft();
                 break;
             case TURN_RIGHT:
-                communicator.sendMsg("d", "instr");
+                communicator.sendMsg("d", "INSTR");
+                turnRight();
                 break;
         }
     }
@@ -141,8 +144,7 @@ public class Robot {
     public void getSensorData(MazeSolver map) {
         int[] result = new int[6];
 
-        Comms comm = Comms.getComm();
-        String msg = comm.recvMsg();
+        String msg = communicator.recvMsg();
         String[] msgArr = msg.split(" ");
 
         if (msgArr[0].equals(Comms.SENSOR_DATA)) {
@@ -160,16 +162,20 @@ public class Robot {
             result[4] = Integer.parseInt(msgArr[5]);
             result[5] = Integer.parseInt(msgArr[6]);
 
-
+            for(int i = 1; i <= 6; i++){
+                System.out.print(msgArr[i]+" ");
+            }
+            System.out.println("");
         }
 
 
         SHORT_RANGE_FRONT_LEFT.physicalSense(map, result[0]);
         SHORT_RANGE_FRONT_CENTER.physicalSense(map, result[1]);
         SHORT_RANGE_FRONT_RIGHT.physicalSense(map, result[2]);
-        SHORT_RANGE_LEFT_BACK.physicalSense(map, result[3]);
+        LONG_RANGE_RIGHT.physicalSense(map, result[3]);
         SHORT_RANGE_LEFT_FRONT.physicalSense(map, result[4]);
-        LONG_RANGE_RIGHT.physicalSense(map, result[5]);
+        SHORT_RANGE_LEFT_BACK.physicalSense(map, result[%]);
+
     }
 
     public static boolean isValidPosition(int x, int y){

@@ -17,11 +17,11 @@ import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
 public class Explorer {
-    public Comms communicator;
+    public static Comms communicator = Comms.getComm();
     public double coverageThreshold = 0.5;
     public static int WAYPOINT_X = 5;
     public static int WAYPOINT_Y = 15;
-    public static int SPEED = 10;
+    public static int SPEED = 1;
     static DijkstraSolver solver;
     private MazeSolver map;
     private JFrame frame;
@@ -31,6 +31,8 @@ public class Explorer {
 
     public Explorer(MazeSolver m) {
         this.map = m;
+        this.communicator.openConnection();
+        communicator.sendMsg("o", "");
     }
 
     public void launch(){
@@ -56,7 +58,6 @@ public class Explorer {
     }
 
     public void startExploration(){
-        communicator = Comms.getComm();
         map.senseMap();
         this.map.repaint();
         int i = 0;

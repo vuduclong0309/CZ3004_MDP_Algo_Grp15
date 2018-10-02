@@ -96,24 +96,55 @@ public class Sensor {
         int posX = orientation.getPosX();
         int posY = orientation.getPosY();
         int dir =  orientation.getDirection();
-        for(int i = 1; i < sensorVal/10; i++){
-            if(i < lowerSensingRange) continue;
-            switch (dir){
-                case NORTH:
-                    posX = posX + i;
-                    break;
-                case SOUTH:
-                    posX = posX - i;
-                    break;
-                case EAST:
-                    posY = posY + i;
-                    break;
-                case WEST:
-                    posY = posY - i;
-                    break;
+        if(sensorVal == 0){
+            for(int i = 1; i < sensorVal; i++) {
+                if (lowerSensingRange == 1) {
+                    switch (dir) {
+                        case NORTH:
+                            posX = posX + i;
+                            break;
+                        case SOUTH:
+                            posX = posX - i;
+                            break;
+                        case EAST:
+                            posY = posY + i;
+                            break;
+                        case WEST:
+                            posY = posY - i;
+                            break;
+                    }
+                    exploredArenaMap.getCell(posX, posY).setExplored();
+                }
             }
-            exploredArenaMap.getCell(posX, posY).setExplored();
-            exploredArenaMap.getCell(posX, posY).setBlocked(i==sensorVal);
+        }
+        else {
+            for(int i = 1; i < sensorVal; i++){
+                if(i < lowerSensingRange) continue;
+                switch (dir){
+                    case NORTH:
+                        posX = posX + i;
+                        break;
+                    case SOUTH:
+                        posX = posX - i;
+                        break;
+                    case EAST:
+                        posY = posY + i;
+                        break;
+                    case WEST:
+                        posY = posY - i;
+                        break;
+                }
+                exploredArenaMap.getCell(posX, posY).setExplored();
+                if(i==sensorVal) {
+                    exploredArenaMap.getCell(posX, posY).setBlocked(i == sensorVal);
+                    for(int dx = -1; dx <= 1; dx ++){
+                        for(int dy = -1; dy <= 1; dy ++){
+                            if(dx == 0 && dy == 0) continue;
+                            exploredArenaMap.getCell(posX + dx, posX + dy).setVirtualWall(true);
+                        }
+                    }
+                }
+            }
         }
     }
 }
