@@ -14,6 +14,7 @@ public class Cell extends JPanel implements CellColor{
     public static final int GRID_SIZE = 32;
     private int row, col;
     private boolean explored = false;
+    private boolean isVirtualWall = false;
     private Color color;
 
     public Cell(int row, int col){
@@ -45,11 +46,11 @@ public class Cell extends JPanel implements CellColor{
     }
 
     public boolean isStart() {
-        return (this.row >= MAZE_HEIGHT - 4 && this.col<=3);
+        return (this.row <= 3 && this.col<=3);
     }
 
     public boolean isGoal() {
-        return (this.col>= MAZE_WIDTH - 4 && this.row <= 3);
+        return (this.col>= MAZE_WIDTH - 4 && this.row >= MAZE_HEIGHT - 4);
     }
 
     public boolean isExplored(){
@@ -72,6 +73,15 @@ public class Cell extends JPanel implements CellColor{
         this.color = c;
         setBackground(this.color);
     }
+
+    public boolean isVirtualWall(){
+        return this.isVirtualWall;
+    }
+
+    public void setVirtualWall(boolean value){
+        this.isVirtualWall = value;
+    }
+
     public void setExplored(){
         this.explored = true;
     }
