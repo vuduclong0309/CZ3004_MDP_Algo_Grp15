@@ -1,6 +1,7 @@
 package grp15.algorithm;
 
 import grp15.object.Cell;
+import grp15.object.Robot;
 import grp15.object.RobotOrientation;
 import grp15.rpi.Comms;
 import grp15.simulator.MazeSolver;
@@ -12,12 +13,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static grp15.Main.communicator;
 import static grp15.object.Cell.GRID_SIZE;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
 public class Explorer {
-    public static Comms communicator = Comms.getComm();
+
     public double coverageThreshold = 0.5;
     public static int WAYPOINT_X = 5;
     public static int WAYPOINT_Y = 15;
@@ -31,8 +33,6 @@ public class Explorer {
 
     public Explorer(MazeSolver m) {
         this.map = m;
-        this.communicator.openConnection();
-        communicator.sendMsg("o", "");
     }
 
     public void launch(){
@@ -48,7 +48,27 @@ public class Explorer {
                 frame.setLocation(0, 0);
                 frame.setVisible(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+                while(true){
+                    String msg = communicator.recvMsg();
+                    String msgArr[] = msg.split(" ");
+                    if (msgArr[0].equals(Comms.START_EXPLORE)){
+                        switch (msgArr[3]){
+                            case "NORTH":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.NORTH);
+                                break;
+                            case "SOUTH":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.SOUTH);
+                                break;
+                            case "EAST":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.EAST);
+                                break;
+                            case "WEST":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.WEST);
+                                break;
+                        }
+                        break;
+                    }
+                }
                 startExploration();
             }
         }  );
@@ -58,6 +78,7 @@ public class Explorer {
     }
 
     public void startExploration(){
+        communicator.sendMsg("o", "");
         map.senseMap();
         this.map.repaint();
         int i = 0;
@@ -145,6 +166,15 @@ public class Explorer {
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(timeout == false);
 
+        while(true){
+            String msg = communicator.recvMsg();
+            String msgArr[] = msg.split(" ");
+            if (msgArr[0].equals(Comms.START_FASTEST_PATH)){
+                setWayPoint(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]));
+                break;
+            }
+        }
+
         if(map.coverage() <= coverageThreshold && timeout == false) {
             MapDescriptor.generateMapDescriptor(map);
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
@@ -205,5 +235,11 @@ public class Explorer {
 
     public void setCoverageThreshold(double input){
         this.coverageThreshold = input;
+    }
+
+    public void setWayPoint(int wx, int wy){
+        this.WAYPOINT_X = wx;
+        this.WAYPOINT_Y = wy;
+        map.repaint();
     }
 }

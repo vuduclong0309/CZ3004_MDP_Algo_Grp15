@@ -19,6 +19,9 @@ public class MazeSolver extends JPanel implements CellColor {
     public MazeSolver(MazeEditor maze, Robot r) {
         this.robot = r;
         this.maze = maze;
+        for(int i = 1; i <= 3; i++){
+            for(int j = 1; j <= 3; j++) getMazeCell()[i][j].setExplored();
+        }
     }
 
     public void paintComponent(Graphics g)

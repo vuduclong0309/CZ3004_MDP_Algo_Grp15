@@ -8,7 +8,7 @@ public class Comms {
     public static final String START_FASTEST_PATH = "START_FASTEST_PATH";       // Android --> PC
     public static final String MAP_STRINGS = "MAP";                             // PC --> Android
     public static final String ROBOT_POS = "ROBOT_POS";                             // PC --> Android
-    public static final String ROBOT_START = "ROBOT_START";                         // PC --> Arduino
+    public static final String REQUEST_SENSE = "o";                         // PC --> Arduino
     public static final String INSTRUCTIONS = "INSTR";                          // PC --> Arduino
     public static final String SENSOR_DATA = "SDATA";                           // Arduino --> PC
 
@@ -46,51 +46,7 @@ public class Comms {
             System.out.println(e.toString());
         }
 
-        System.out.println("Failed to establish connection!");
-    }
-    public void sendMsg(String msg, String msgType) {
-        System.out.println("Sending a message");
-
-        try {
-            String outputMsg;
-            if (msg == null) {
-                outputMsg = msgType + "\n";
-            } else if (msgType.equals(MAP_STRINGS) || msgType.equals(ROBOT_POS)) {
-                outputMsg = msgType + " " + msg + "\n";
-            } else {
-                outputMsg = msgType + "\n" + msg + "\n";
-            }
-
-            System.out.println("Sending out message:\n" + outputMsg);
-            writer.write(outputMsg);
-            writer.flush();
-        } catch (IOException e) {
-            System.out.println("sendMsg() --> IOException");
-        } catch (Exception e) {
-            System.out.println("sendMsg() --> Exception");
-            System.out.println(e.toString());
-        }
-    }
-    public String recvMsg() {
-        System.out.println("Receiving a message");
-
-        try {
-            StringBuilder sb = new StringBuilder();
-            String input = reader.readLine();
-
-            if (input != null && input.length() > 0) {
-                sb.append(input);
-                System.out.println(sb.toString());
-                return sb.toString();
-            }
-        } catch (IOException e) {
-            System.out.println("recvMsg() --> IOException");
-        } catch (Exception e) {
-            System.out.println("recvMsg() --> Exception");
-            System.out.println(e.toString());
-        }
-
-        return null;
+        System.out.println("Connection failed.");
     }
 
     public boolean isConnected() {
@@ -98,7 +54,7 @@ public class Comms {
     }
 
     public void closeConnection() {
-        System.out.println("Closing connection...");
+        System.out.println("Closing connection.");
 
         try {
             reader.close();
@@ -117,6 +73,58 @@ public class Comms {
             System.out.println(e.toString());
         }
     }
+    public void sendMsg(String msg, String msgType) {
+        System.out.println("Sending a message");
+
+        try {
+            String outputMsg;
+            if (msg == null) {
+                //outputMsg = msgType + "\n";
+                outputMsg = msgType + "\n";
+            } /*else if (msgType.equals(MAP_STRINGS) || msgType.equals(ROBOT_POS)) {
+                outputMsg = msgType + " " + msg + "\n";
+
+            }*/ else {
+                //outputMsg = msgType + " " + msg + "\n";
+                outputMsg = msgType + " " + msg + "\n";
+            }
+
+            System.out.println("Sending out message:\n" + outputMsg);
+            writer.write(outputMsg);
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println("sendMsg() --> IOException");
+            //test
+            sendMsg(msg, msgType);
+        } catch (Exception e) {
+            System.out.println("sendMsg() --> Exception");
+            System.out.println(e.toString());
+            sendMsg(msg, msgType);
+        }
+    }
+    public String recvMsg() {
+        System.out.println("Receiving a message");
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            String input = reader.readLine();
+
+            if (input != null && input.length() > 0) {
+                sb.append(input);
+                System.out.println(sb.toString());
+                return sb.toString();
+            }
+        } catch (IOException e) {
+            System.out.println("receiveMsg() --> IOException");
+        } catch (Exception e) {
+            System.out.println("receiveMsg() --> Exception");
+            System.out.println(e.toString());
+        }
+
+        return null;
+    }
+
+
 
 
 
