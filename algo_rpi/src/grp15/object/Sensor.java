@@ -17,19 +17,20 @@ public class Sensor {
     private final String id;
 
     public RobotOrientation getSensorOrientation(){
-        int posX;
-        int posY;
+        int posX = 0;
+        int posY = 0;
+        System.out.println(r.getPosX() + " " + r.getPosY() + " " + displacementX + " " + displacementY + " " + this.sensorDir);
         int dir = NORTH;
-        switch (this.sensorDir){
+        switch (r.getDirection()){
             case NORTH:
                 posX = r.getPosX() + displacementX;
                 posY = r.getPosY() + displacementY;
-                dir = r.getDirection();
+                dir = this.sensorDir;
                 break;
             case SOUTH:
                 posX = r.getPosX() + 2 - displacementX;
                 posY = r.getPosY() + displacementY;
-                switch (r.getDirection()){
+                switch (this.sensorDir){
                     case NORTH:
                         dir = SOUTH;
                         break;
@@ -47,7 +48,7 @@ public class Sensor {
             case EAST:
                 posX = r.getPosX() + 2 - displacementY;
                 posY = r.getPosY() + displacementX;
-                switch (r.getDirection()){
+                switch (this.sensorDir){
                     case NORTH:
                         dir = EAST;
                         break;
@@ -65,7 +66,7 @@ public class Sensor {
             case WEST:
                 posX = r.getPosX() + displacementY;
                 posY = r.getPosY() + 2 - displacementX;
-                switch (r.getDirection()){
+                switch (this.sensorDir){
                     case NORTH:
                         dir = WEST;
                         break;
@@ -101,8 +102,8 @@ public class Sensor {
      */
     public void physicalSense(MazeSolver exploredArenaMap, int sensorVal) {
         RobotOrientation orientation = getSensorOrientation();
-        int posX = orientation.getPosX() - 1;
-        int posY = orientation.getPosY() - 1;
+        int posX = orientation.getPosX() ;
+        int posY = orientation.getPosY() ;
         int dir =  orientation.getDirection();
         int nPosX = 0; int nPosY = 0;
         System.out.println("Robot" + r.getPosX() + " " + r.getPosY() + " " + r.getDirection());

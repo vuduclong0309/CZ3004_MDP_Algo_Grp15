@@ -52,7 +52,7 @@ public class Explorer {
                     String msg = communicator.recvMsg();
                     String msgArr[] = msg.split(" ");
                     if (msgArr[0].equals(Comms.START_EXPLORE)){
-                        switch (msgArr[3]){
+                        switch (msgArr[0]){
                             case "NORTH":
                                 map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.NORTH);
                                 break;
@@ -80,6 +80,7 @@ public class Explorer {
     public void startExploration(){
         communicator.sendMsg("o", "");
         map.senseMap();
+        MapDescriptor.generateMapDescriptor(map);
         this.map.repaint();
         int i = 0;
         boolean init = true;
@@ -92,6 +93,7 @@ public class Explorer {
                 System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
                 map.getRobot().moveRobot(path.get(j));
                 map.senseMap();
+                MapDescriptor.generateMapDescriptor(map);
                 //for(int k=1;k<=100;k++) System.out.println("pause thread");
                 this.map.repaint();
                 try {
@@ -149,6 +151,7 @@ public class Explorer {
                 System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + path.get(j));
                 map.getRobot().moveRobot(path.get(j));
                 map.senseMap();
+                MapDescriptor.generateMapDescriptor(map);
                 //for(int k=1;k<=100;k++) System.out.println("pause thread");
                 this.map.repaint();
                 visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
@@ -190,10 +193,7 @@ public class Explorer {
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
-                int dx = nextPosX - WAYPOINT_X;
-                int dy = nextPosY - WAYPOINT_Y;
-                boolean isWayPoint = (dx <= 0) && (dx >= -2) && (dy <= 0) && (dy >= -2);
-                if (isWayPoint == false) continue;
+                if ((nextPosX != (WAYPOINT_X -1))  || (nextPosY != (WAYPOINT_Y - 1))) continue;
                 if (minDistance > distance) {
                     //System.out.println(nextPosMinDistance.toString());
                     nextPosMinDistance = entry;

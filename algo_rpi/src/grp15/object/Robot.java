@@ -50,12 +50,12 @@ public class Robot {
         this.posX = x;
         this.posY = y;
         this.direction = dir;
-        SHORT_RANGE_FRONT_LEFT = new Sensor("srfl", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, posX + 2, posY, NORTH, this);
-        SHORT_RANGE_FRONT_CENTER = new Sensor("srfc", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, posX + 2, posY + 1, NORTH, this);
-        SHORT_RANGE_FRONT_RIGHT = new Sensor("srfr", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, posX + 2, posY + 2, NORTH, this);
-        LONG_RANGE_RIGHT = new Sensor("lrr", L_SENSOR_LOWER_RANGE_VALUE, L_SENSOR_UPPER_RANGE_VALUE, posX + 2, posY + 2, EAST, this);
-        SHORT_RANGE_LEFT_FRONT = new Sensor("srlf", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, posX + 2, posY, WEST, this);
-        SHORT_RANGE_LEFT_BACK = new Sensor("srlb", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, posX, posY, WEST, this);
+        SHORT_RANGE_FRONT_LEFT = new Sensor("srfl", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, 2, 0, NORTH, this);
+        SHORT_RANGE_FRONT_CENTER = new Sensor("srfc", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, 2, 1, NORTH, this);
+        SHORT_RANGE_FRONT_RIGHT = new Sensor("srfr", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, 2, 2, NORTH, this);
+        LONG_RANGE_RIGHT = new Sensor("lrr", L_SENSOR_LOWER_RANGE_VALUE, L_SENSOR_UPPER_RANGE_VALUE, 2, 2, EAST, this);
+        SHORT_RANGE_LEFT_FRONT = new Sensor("srlf", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, 2, 0, WEST, this);
+        SHORT_RANGE_LEFT_BACK = new Sensor("srlb", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, 0, 0, WEST, this);
     }
 
     public void moveForward() {
