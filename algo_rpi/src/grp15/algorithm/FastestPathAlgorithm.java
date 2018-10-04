@@ -31,7 +31,7 @@ public class FastestPathAlgorithm {
             }
             System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + movePath.get(j));
             mazeMap.getRobot().moveRobot(movePath.get(j));
-            mazeMap.senseMap();
+            //mazeMap.senseMap();
             try {
                 Thread.sleep(1000/Explorer.SPEED);
             } catch (InterruptedException e) {

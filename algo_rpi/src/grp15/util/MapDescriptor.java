@@ -57,6 +57,7 @@ public class MapDescriptor {
                 part2Hex.setLength(0);
             }
         }
+        mapDescriptors[1] = strP2Hex;
         System.out.println("Part 2: " + strP2Hex);
 
         return mapDescriptors;

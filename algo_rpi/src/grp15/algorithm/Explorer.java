@@ -50,6 +50,7 @@ public class Explorer {
                 frame.setLocation(0, 0);
                 frame.setVisible(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                
                 while(true){
                     String msg = communicator.recvMsg();
                     String msgArr[] = msg.split(" ");
