@@ -4,6 +4,7 @@ import grp15.rpi.Comms;
 import grp15.simulator.MazeEditor;
 import grp15.simulator.MazeSolver;
 import grp15.object.Sensor;
+import grp15.util.MapDescriptor;
 
 import static grp15.Main.communicator;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
@@ -22,16 +23,16 @@ public class Robot {
     public static final int START = 9; //c
 
     private int S_SENSOR_LOWER_RANGE_VALUE = 1;
-    private int S_SENSOR_UPPER_RANGE_VALUE = 3;
+    private int S_SENSOR_UPPER_RANGE_VALUE = 2;
     private int L_SENSOR_LOWER_RANGE_VALUE = 1;
-    private int L_SENSOR_UPPER_RANGE_VALUE = 3;
+    private int L_SENSOR_UPPER_RANGE_VALUE = 2;
 
     public static int sensorFShortest = 1;
-    public static int sensorFLongest = 3;
+    public static int sensorFLongest = 2;
     public static int sensorLShortest = 1;
-    public static int sensorLLongest = 3;
+    public static int sensorLLongest = 2;
     public static int sensorRShortest = 1;
-    public static int sensorRLongest = 3;
+    public static int sensorRLongest = 2;
 
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
@@ -188,6 +189,10 @@ public class Robot {
         System.out.println("SRLB");
         SHORT_RANGE_LEFT_BACK.physicalSense(map, result[5]);
         map.repaint();
+
+        String mapUpdate = MapDescriptor.toAndroid(map);
+
+        communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
     }
 
     public static boolean isValidPosition(int x, int y){

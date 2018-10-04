@@ -7,6 +7,7 @@ public class Comms {
     public static final String START_EXPLORE = "START_EXPLORE";                 // Android --> PC
     public static final String START_FASTEST_PATH = "START_FASTEST_PATH";       // Android --> PC
     public static final String MAP_STRINGS = "MAP";                             // PC --> Android
+    public static final String FINAL_MAP = "FINAL";
     public static final String ROBOT_POS = "ROBOT_POS";                             // PC --> Android
     public static final String REQUEST_SENSE = "o";                         // PC --> Arduino
     public static final String INSTRUCTIONS = "INSTR";                          // PC --> Arduino

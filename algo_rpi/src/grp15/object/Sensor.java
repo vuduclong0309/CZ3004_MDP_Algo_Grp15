@@ -5,6 +5,8 @@ import grp15.simulator.MazeSolver;
 import javafx.util.Pair;
 
 import static grp15.object.Robot.*;
+import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
+import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
 public class Sensor {
     private final int lowerSensingRange;
@@ -29,7 +31,7 @@ public class Sensor {
                 break;
             case SOUTH:
                 posX = r.getPosX() + 2 - displacementX;
-                posY = r.getPosY() + displacementY;
+                posY = r.getPosY() + 2 - displacementY;
                 switch (this.sensorDir){
                     case NORTH:
                         dir = SOUTH;
@@ -162,6 +164,8 @@ public class Sensor {
                     for(int dx = -1; dx <= 1; dx ++){
                         for(int dy = -1; dy <= 1; dy ++){
                             if(dx == 0 && dy == 0) continue;
+                            if(nPosX + dx < 0 || nPosX >= MAZE_HEIGHT) continue;
+                            if(nPosY + dy < 0 || nPosY >= MAZE_WIDTH) continue;
                             exploredArenaMap.getCell(nPosX + dx, nPosX + dy).setVirtualWall(true);
                         }
                     }

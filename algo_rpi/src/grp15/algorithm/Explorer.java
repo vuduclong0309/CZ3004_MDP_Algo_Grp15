@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 import static grp15.Main.communicator;
 import static grp15.object.Cell.GRID_SIZE;
+import static grp15.object.CellColor.FREE;
+import static grp15.object.CellColor.WAYPOINT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
@@ -70,6 +72,7 @@ public class Explorer {
                     }
                 }
                 startExploration();
+
             }
         }  );
         thread.setPriority(Thread.NORM_PRIORITY);
@@ -169,6 +172,13 @@ public class Explorer {
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(timeout == false);
 
+        String [] finalMap = MapDescriptor.generateMapDescriptor(map);
+        communicator.sendMsg (finalMap[0] + " " + finalMap[1], Comms.FINAL_MAP);
+
+        //String mapUpdate = MapDescriptor.toAndroid(map);
+
+        //communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
+
         while(true){
             String msg = communicator.recvMsg();
             String msgArr[] = msg.split(" ");
@@ -238,8 +248,10 @@ public class Explorer {
     }
 
     public void setWayPoint(int wx, int wy){
+        map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].setColor(FREE);
         this.WAYPOINT_X = wx;
         this.WAYPOINT_Y = wy;
+        map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].setColor(WAYPOINT);
         map.repaint();
     }
 }
