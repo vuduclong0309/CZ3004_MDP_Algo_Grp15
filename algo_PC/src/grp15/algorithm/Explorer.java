@@ -79,7 +79,7 @@ public class Explorer {
                 }
             }
         }while(visited[this.map.getRobot().getPosX()][this.map.getRobot().getPosY()][this.map.getRobot().getDirection()] == false);
-        System.out.println("done");
+        System.out.println("wall hug done");
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
         solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
@@ -91,13 +91,14 @@ public class Explorer {
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             double gridIndex = 0;
             for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: distanceMap.entrySet()){
-                //System.out.println("entry"+entry.toString());
+
                 int nextPosX = entry.getKey().getKey().getKey();
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
                 int newIndex = falseSense(nextPosX, nextPosY, direction, map.getMazeCell()); // == 0 && !(nextPosX == 1 && nextPosY == 1)) continue;
                 //init = false;
+                System.out.println("entry"+entry.toString() + "@" + newIndex);
                 if(newIndex == 0) continue;
                 if (nextPosMinDistance == null){
 

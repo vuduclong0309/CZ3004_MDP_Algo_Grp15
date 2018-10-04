@@ -18,11 +18,11 @@ public class Robot {
     public static final int STOP = 8;
 
     public static int sensorFShortest = 1;
-    public static int sensorFLongest = 2;
+    public static int sensorFLongest = 3;
     public static int sensorLShortest = 1;
-    public static int sensorLLongest = 2;
-    public static int sensorRShortest = 2;
-    public static int sensorRLongest = 5;
+    public static int sensorLLongest = 3;
+    public static int sensorRShortest = 1;
+    public static int sensorRLongest = 3;
 
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
