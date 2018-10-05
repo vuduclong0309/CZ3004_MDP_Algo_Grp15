@@ -107,7 +107,7 @@ public class Explorer {
                     e.printStackTrace();
                 }
             }
-        }while(visited[this.map.getRobot().getPosX()][this.map.getRobot().getPosY()][this.map.getRobot().getDirection()] == false);
+        }while(this.map.getRobot().getPosX() != 1 || this.map.getRobot().getPosY() != 1);
         System.out.println("done");
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 

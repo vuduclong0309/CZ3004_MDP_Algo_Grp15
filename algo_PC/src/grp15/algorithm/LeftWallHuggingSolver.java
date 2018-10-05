@@ -3,12 +3,10 @@ package grp15.algorithm;
 import grp15.object.Cell;
 import grp15.object.Robot;
 import grp15.object.RobotOrientation;
-import javafx.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
 
 import static grp15.object.Robot.*;
-import static grp15.object.Robot.TURN_RIGHT;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
@@ -25,6 +23,7 @@ public class LeftWallHuggingSolver {
     public ArrayList<Integer> getMove(){
         ArrayList<Integer> move;
         RobotOrientation nextpos = new RobotOrientation(this.robot);
+        System.out.println("analyzing" + nextpos.toPairFormat());
         System.out.println(nextpos.toPairFormat());
         nextpos.turnLeft();
         System.out.println(nextpos.toPairFormat());
@@ -70,11 +69,11 @@ public class LeftWallHuggingSolver {
         //maze position is blocked
         for(int i=0;i<=2;i++){
             for(int j=0;j<=2;j++){
-                System.out.println((posX+i)+" "+(posY+j));
+                //System.out.println((posX+i)+" "+(posY+j));
                 if(mazeMap[posX+i][posY+j].isExplored() == false) return false;
-                System.out.println("explored");
+                //System.out.println("explored");
                 if(mazeMap[posX+i][posY+j].isBlocked()) return false;
-                System.out.println("not blocked");
+                //System.out.println("not blocked");
             }
         }
         System.out.println("valid");

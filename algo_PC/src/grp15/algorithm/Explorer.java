@@ -56,6 +56,7 @@ public class Explorer {
     }
 
     public void startExploration(){
+
         map.senseMap();
         this.map.repaint();
         int i = 0;
@@ -78,7 +79,7 @@ public class Explorer {
                     e.printStackTrace();
                 }
             }
-        }while(visited[this.map.getRobot().getPosX()][this.map.getRobot().getPosY()][this.map.getRobot().getDirection()] == false);
+        }while(this.map.getRobot().getPosX() != 1 || this.map.getRobot().getPosY() != 1);
         System.out.println("wall hug done");
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
@@ -144,6 +145,7 @@ public class Explorer {
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(timeout == false);
 
+        System.out.println("Turn and Move" + map.getRobot().getTotalMove() + " " + map.getRobot().getTotalTurn());
         if(map.coverage() <= coverageThreshold && timeout == false) {
             MapDescriptor.generateMapDescriptor(map);
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);

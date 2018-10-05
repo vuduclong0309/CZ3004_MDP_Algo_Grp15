@@ -18,15 +18,16 @@ public class Robot {
     public static final int STOP = 8;
 
     public static int sensorFShortest = 1;
-    public static int sensorFLongest = 3;
+    public static int sensorFLongest = 1;
     public static int sensorLShortest = 1;
-    public static int sensorLLongest = 3;
+    public static int sensorLLongest = 1;
     public static int sensorRShortest = 1;
     public static int sensorRLongest = 3;
 
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
-
+    int totalMove = 0;
+    int totalTurn = 0;
     private int posX, posY;
     private int direction = NORTH;
 
@@ -98,12 +99,15 @@ public class Robot {
         switch (signal){
             case MOVE_FORWARD:
                 this.moveForward();
+                totalMove++;
                 break;
             case TURN_LEFT:
                 this.turnLeft();
+                totalTurn++;
                 break;
             case TURN_RIGHT:
                 this.turnRight();
+                totalTurn++;
                 break;
         }
     }
@@ -265,5 +269,13 @@ public class Robot {
             for(int j = 0; j < 2; j++) if(MazeEditor.isValidPosition(x + i, y + j) == false) return false;
         }
         return true;
+    }
+
+    public int getTotalMove(){
+        return this.totalMove;
+    }
+
+    public int getTotalTurn(){
+        return this.totalTurn;
     }
 }
