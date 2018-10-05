@@ -20,7 +20,7 @@ public class Explorer {
 
     public double coverageThreshold = 0.5;
     public static int WAYPOINT_X = 5;
-    public static int WAYPOINT_Y = 15;
+    public static int WAYPOINT_Y = 14;
     public static int SPEED = 10;
     static DijkstraSolver solver;
     private MazeSolver map;
@@ -161,10 +161,7 @@ public class Explorer {
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
-                int dx = nextPosX - WAYPOINT_X;
-                int dy = nextPosY - WAYPOINT_Y;
-                boolean isWayPoint = (dx <= 0) && (dx >= -2) && (dy <= 0) && (dy >= -2);
-                if (isWayPoint == false) continue;
+                if ((nextPosX != (WAYPOINT_X -1))  || (nextPosY != (WAYPOINT_Y - 1))) continue;
                 if (minDistance > distance) {
                     //System.out.println(nextPosMinDistance.toString());
                     nextPosMinDistance = entry;

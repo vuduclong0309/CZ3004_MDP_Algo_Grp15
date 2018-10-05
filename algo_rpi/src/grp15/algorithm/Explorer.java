@@ -17,6 +17,8 @@ import static grp15.Main.communicator;
 import static grp15.object.Cell.GRID_SIZE;
 import static grp15.object.CellColor.FREE;
 import static grp15.object.CellColor.WAYPOINT;
+import static grp15.object.Robot.MOVE_COST;
+import static grp15.object.Robot.TURN_COST;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
@@ -111,7 +113,7 @@ public class Explorer {
         System.out.println("done");
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
-        solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        solver = new DijkstraSolver(map.getMazeCell(), TURN_COST, MOVE_COST, this.map.getRobot());
         System.out.println(map.coverage());
         do{
             System.out.println("iteration"+i);

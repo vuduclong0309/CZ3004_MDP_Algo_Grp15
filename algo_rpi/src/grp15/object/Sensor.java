@@ -108,8 +108,8 @@ public class Sensor {
         int posY = orientation.getPosY() ;
         int dir =  orientation.getDirection();
         int nPosX = 0; int nPosY = 0;
-        System.out.println("Robot" + r.getPosX() + " " + r.getPosY() + " " + r.getDirection());
-        System.out.println("Sensor" + posX + " " + posY + " " + dir + " " + sensorVal);
+        System.out.println("Robot" + r.getPosX() + " " + r.getPosY() + " " + Robot.toDirectionString(r.getDirection()));
+        System.out.println("Sensor" + posX + " " + posY + " " + Robot.toDirectionString(dir) + " " + sensorVal);
         if(sensorVal == 0){
             for(int i = 1; i <= upperSensingRange; i++) {
                 if (lowerSensingRange == 1) {

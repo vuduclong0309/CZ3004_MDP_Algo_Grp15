@@ -192,7 +192,28 @@ public class Robot {
 
         String mapUpdate = MapDescriptor.toAndroid(map);
 
-        communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
+        communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
+    }
+
+    public static String toDirectionString(int dir){
+        String res = "NSEW";
+
+        switch (dir){
+            case 0:
+                res = "NORTH";
+                break;
+            case 1:
+                res = "SOUTH";
+                break;
+            case 2:
+                res = "EAST";
+                break;
+            case 3:
+                res = "WEST";
+                break;
+        }
+
+        return res;
     }
 
     public static boolean isValidPosition(int x, int y){
