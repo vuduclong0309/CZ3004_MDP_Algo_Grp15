@@ -137,8 +137,8 @@ public class RobotOrientation {
                         break;
                     case SOUTH:
                         if (this.posX - i > 0) {
-                            if(map.getMazeCell()[this.posX - i][this.posY + j].isExplored() == true) {
-                                if(map.getMazeCell()[this.posX - i][this.posY + j].isBlocked()) wall[j] = true;
+                            if(map.getMazeCell()[this.posX - i][this.posY + 2 - j].isExplored() == true) {
+                                if(map.getMazeCell()[this.posX - i][this.posY + 2 - j].isBlocked()) wall[j] = true;
                                 continue;
                             }
                             else{
@@ -150,8 +150,8 @@ public class RobotOrientation {
                         break;
                     case EAST:
                         if (this.posY + 2 + i <= MAZE_WIDTH - 1) {
-                            if(map.getMazeCell()[this.posX + j][this.posY + 2 + i].isExplored() == true) {
-                                if(map.getMazeCell()[this.posX + j][this.posY + 2 + i].isBlocked()) wall[j] = true;
+                            if(map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].isExplored() == true) {
+                                if(map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].isBlocked()) wall[j] = true;
                                 continue;
                             }
                             else{
@@ -184,7 +184,7 @@ public class RobotOrientation {
         //this part goes according to position and number of sensors
         //we have 1 long right sensor at first row of robot
         boolean wall[] = new boolean[3];
-        wall[0] = true; wall[1] = true; wall[2] = false;
+        wall[0] = false; wall[1] = true; wall[2] = false;
         int i; int res = 0;
         for (i = 1; i <= sensorRLongest; i++) {
             for(int j = 0; j < 3; j++) {
@@ -208,8 +208,8 @@ public class RobotOrientation {
                     case EAST:
                         if (this.posX - i >= 0) {
                             if(i >= sensorRShortest) {
-                                if (map.getMazeCell()[this.posX - i][this.posY + j].isExplored()) {
-                                    if(map.getMazeCell()[this.posX - i][this.posY + j].isBlocked()) wall[j] = true;
+                                if (map.getMazeCell()[this.posX - i][this.posY + 2 - j].isExplored()) {
+                                    if(map.getMazeCell()[this.posX - i][this.posY + 2 - j].isBlocked()) wall[j] = true;
                                     continue;
                                 }
                                 else {
@@ -223,8 +223,8 @@ public class RobotOrientation {
                     case NORTH:
                         if (this.posY + 2 + i <= MAZE_WIDTH - 1) {
                             if(i >= sensorRShortest) {
-                                if(map.getMazeCell()[this.posX + j][this.posY + 2 + i].isExplored()){
-                                    if(map.getMazeCell()[this.posX + j][this.posY + 2 + i].isBlocked()) wall[j] = true;
+                                if(map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].isExplored()){
+                                    if(map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].isBlocked()) wall[j] = true;
                                     continue;
                                 }
                                 else{
@@ -269,8 +269,8 @@ public class RobotOrientation {
                 switch (this.direction) {
                     case EAST:
                         if (this.posX + 2 + i <= MAZE_HEIGHT - 1) {
-                            if(map.getMazeCell()[this.posX + 2 + i][this.posY + j].isExplored()) {
-                                if(map.getMazeCell()[this.posX + 2 + i][this.posY + j].isBlocked()) wall[j] = true;
+                            if(map.getMazeCell()[this.posX + 2 + i][this.posY + 2 - j].isExplored()) {
+                                if(map.getMazeCell()[this.posX + 2 + i][this.posY + 2 - j].isBlocked()) wall[j] = true;
                                 continue;
                             }
                             else{
@@ -308,8 +308,8 @@ public class RobotOrientation {
                         break;
                     case NORTH:
                         if (this.posY - i > 0) {
-                            if(map.getMazeCell()[this.posX + j][this.posY - i].isExplored() == true){
-                                if(map.getMazeCell()[this.posX + j][this.posY - i].isExplored()) wall[j] = true;
+                            if(map.getMazeCell()[this.posX + 2 - j][this.posY - i].isExplored() == true){
+                                if(map.getMazeCell()[this.posX + 2 - j][this.posY - i].isExplored()) wall[j] = true;
                                 continue;
                             }
                             else{
