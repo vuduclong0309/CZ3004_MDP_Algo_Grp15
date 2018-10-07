@@ -155,17 +155,21 @@ public class Explorer {
 
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             int minDistance = 10000;
+            int minWaypointDislocation = 100;
             for (HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry : distanceMap.entrySet()) {
                 //System.out.println("entry"+entry.toString());
                 int nextPosX = entry.getKey().getKey().getKey();
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
-                if ((nextPosX != (WAYPOINT_X -1))  || (nextPosY != (WAYPOINT_Y - 1))) continue;
-                if (minDistance > distance) {
+                int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
+                int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
+                if(waypointDislocation > minWaypointDislocation) continue;
+                if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
                     //System.out.println(nextPosMinDistance.toString());
                     nextPosMinDistance = entry;
                     minDistance = distance;
+                    minWaypointDislocation = waypointDislocation;
                 }
             }
             pathAlgorithm.moveRobotToPosition(new RobotOrientation(nextPosMinDistance.getKey()), map, true);
