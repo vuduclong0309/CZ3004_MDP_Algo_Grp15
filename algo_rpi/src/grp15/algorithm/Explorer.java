@@ -27,7 +27,7 @@ public class Explorer {
     public double coverageThreshold = 0.5;
     public static int WAYPOINT_X = 5;
     public static int WAYPOINT_Y = 15;
-    public static int SPEED = 1;
+    public static int SPEED = 1000000;
     static DijkstraSolver solver;
     private MazeSolver map;
     private JFrame frame;
@@ -57,24 +57,36 @@ public class Explorer {
                     String msg = communicator.recvMsg();
                     String msgArr[] = msg.split(" ");
                     if (msgArr[0].equals(Comms.START_EXPLORE)){
-                        switch (msgArr[0]){
+                        switch (msgArr[3]){
                             case "NORTH":
-                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.NORTH);
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.NORTH, map);
                                 break;
                             case "SOUTH":
-                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.SOUTH);
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.SOUTH, map);
                                 break;
                             case "EAST":
-                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.EAST);
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.EAST, map);
                                 break;
                             case "WEST":
-                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.WEST);
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.WEST, map);
                                 break;
                         }
                         break;
                     }
                 }
                 startExploration();
+
+                while(true){
+                    String msg = communicator.recvMsg();
+                    System.out.println("test1");
+                    String msgArr[] = msg.split(" ");
+                    if (msgArr[0].equals(Comms.START_FASTEST_PATH)){
+                        setWayPoint(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]));
+                        break;
+                    }
+                }
+
+                startFastestPath();
 
             }
         }  );
@@ -178,24 +190,18 @@ public class Explorer {
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
         communicator.sendMsg (finalMap[0] + " " + finalMap[1], Comms.FINAL_MAP);
 
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
         //String mapUpdate = MapDescriptor.toAndroid(map);
 
         //communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
+    }
 
-        while(true){
-            String msg = communicator.recvMsg();
-            String msgArr[] = msg.split(" ");
-            if (msgArr[0].equals(Comms.START_FASTEST_PATH)){
-                setWayPoint(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]));
-                break;
-            }
-        }
-
+    void startFastestPath(){
         if(map.coverage() <= coverageThreshold && timeout == false) {
             MapDescriptor.generateMapDescriptor(map);
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
-
+            HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
 
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;

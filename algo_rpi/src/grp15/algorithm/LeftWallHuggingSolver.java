@@ -68,11 +68,11 @@ public class LeftWallHuggingSolver {
         //maze position is blocked
         for(int i=0;i<=2;i++){
             for(int j=0;j<=2;j++){
-                //System.out.println((posX+i)+" "+(posY+j));
+                System.out.println((posX+i)+" "+(posY+j));
                 if(mazeMap[posX+i][posY+j].isExplored() == false) return false;
-                //System.out.println("explored");
+                System.out.println("explored");
                 if(mazeMap[posX+i][posY+j].isBlocked()) return false;
-                //System.out.println("not blocked");
+                System.out.println("not blocked");
             }
         }
         System.out.println("valid");

@@ -36,3 +36,8 @@ no error
 no abnormal robot movement
 fully explored 
 complete fastest
+
+Part 1: ffffffffffffffffffffffffffffff887f10fe00f801800300000000000000000007000e001f
+Part 2: 0000000000000800c000000042d40405048000
+note: no way to target
+map for sensor explore testing

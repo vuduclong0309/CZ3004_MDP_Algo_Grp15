@@ -23,14 +23,14 @@ public class Robot {
     public static final int START = 9; //c
 
     private int S_SENSOR_LOWER_RANGE_VALUE = 1;
-    private int S_SENSOR_UPPER_RANGE_VALUE = 2;
+    private int S_SENSOR_UPPER_RANGE_VALUE = 1;
     private int L_SENSOR_LOWER_RANGE_VALUE = 1;
     private int L_SENSOR_UPPER_RANGE_VALUE = 3;
 
     public static int sensorFShortest = 1;
-    public static int sensorFLongest = 2;
+    public static int sensorFLongest = 1;
     public static int sensorLShortest = 1;
-    public static int sensorLLongest = 2;
+    public static int sensorLLongest = 1;
     public static int sensorRShortest = 1;
     public static int sensorRLongest = 3;
 
@@ -192,7 +192,7 @@ public class Robot {
 
         String mapUpdate = MapDescriptor.toAndroid(map);
 
-        communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
+        communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosY() + " " + this.getPosX(), Comms.MAP_STRINGS);
     }
 
     public static String toDirectionString(int dir){
@@ -223,9 +223,14 @@ public class Robot {
         return true;
     }
 
-    public void setPos(int x, int y, int dir){
+    public void setPos(int x, int y, int dir, MazeSolver map){
         this.posX = x;
         this.posY = y;
         this.direction = dir;
+        for(int i = 0 ; i < 3 ; i++){
+            for(int j = 0 ; j < 3; j++){
+                map.getMazeCell()[x + i][y + j].setExplored();
+            }
+        }
     }
 }
