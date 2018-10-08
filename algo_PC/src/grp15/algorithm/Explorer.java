@@ -8,8 +8,12 @@ import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import static grp15.object.Cell.GRID_SIZE;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
@@ -25,7 +29,7 @@ public class Explorer {
     static DijkstraSolver solver;
     private MazeSolver map;
     private JFrame frame;
-
+    boolean startFP = false;
     boolean visited [][][] = new boolean[MAZE_HEIGHT][MAZE_WIDTH][4];
     private boolean timeout = false;
 
@@ -34,7 +38,7 @@ public class Explorer {
     }
 
     public void launch(){
-        Thread thread = new Thread(new Runnable() {
+        final Thread thread = new Thread(new Runnable() {
             public void run() {
                 frame = new JFrame("Explorer");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,9 +49,28 @@ public class Explorer {
                 frame.setLocationByPlatform(false);
                 frame.setLocation(0, 0);
                 frame.setVisible(true);
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                JButton startFastestPathButton = new JButton ("Start Fastest Path");
+                startFastestPathButton.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        startFP = true;
+                    }
+
+                });
+
+                frame.getContentPane().add(startFastestPathButton, BorderLayout.SOUTH);
 
                 startExploration();
+                while(startFP == false) {
+                    try {
+                        System.out.println("waiting for fastest path button");
+                        TimeUnit.SECONDS.sleep(1);
+                    }
+                    catch (Exception e){
+
+                    }
+                };
+                startFastestPath();
             }
         }  );
         thread.setPriority(Thread.NORM_PRIORITY);
@@ -146,11 +169,15 @@ public class Explorer {
         }while(timeout == false);
 
         System.out.println("Turn and Move" + map.getRobot().getTotalMove() + " " + map.getRobot().getTotalTurn());
-        if(map.coverage() <= coverageThreshold && timeout == false) {
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
+    }
+
+    void startFastestPath() {
+        if (map.coverage() <= coverageThreshold && timeout == false) {
             MapDescriptor.generateMapDescriptor(map);
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
-
+            HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
 
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
@@ -162,9 +189,10 @@ public class Explorer {
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
-                int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
+                int dx = nextPosX - WAYPOINT_X;
+                int dy = nextPosY - WAYPOINT_Y;
                 int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
-                if(waypointDislocation > minWaypointDislocation) continue;
+                if (waypointDislocation > minWaypointDislocation) continue;
                 if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
                     //System.out.println(nextPosMinDistance.toString());
                     nextPosMinDistance = entry;

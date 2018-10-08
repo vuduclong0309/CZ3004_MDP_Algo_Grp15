@@ -172,6 +172,9 @@ public class Sensor {
                         }
                     }
                 }
+                else{
+                    exploredArenaMap.getCell(nPosX, nPosY).setBlocked(false);
+                }
             }
         }
     }
