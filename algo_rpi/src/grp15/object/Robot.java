@@ -239,4 +239,10 @@ public class Robot {
         this.posY = y;
         this.direction = dir;
     }
+
+    public void setPosRaw(RobotOrientation target){
+        this.posX = target.getPosX();
+        this.posY = target.getPosY();
+        this.direction = target.getDirection();
+    }
 }

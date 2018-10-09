@@ -212,7 +212,8 @@ public class Explorer {
         }while(timeout == false);
 
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), WEST)), map, false);
+        ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
+        pathAlgorithm.moveRobotbyPath(backToStart, map, false);
         //String mapUpdate = MapDescriptor.toAndroid(map);
 
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
@@ -225,7 +226,7 @@ public class Explorer {
 
     void startFastestPath(){
             map.getRobot().setPos(1, 1, NORTH, map);
-            map.senseMap();
+            map.repaint();
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
@@ -249,9 +250,12 @@ public class Explorer {
                     minWaypointDislocation = waypointDislocation;
                 }
             }
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation(nextPosMinDistance.getKey()), map, true);
-
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map, true);
+            ArrayList<Integer> startToWaypoint = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
+            ArrayList<Integer> waypointToFinal = pathAlgorithm.getFastestPath(new RobotOrientation(nextPosMinDistance.getKey()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
+            ArrayList<Integer> finalPath = new ArrayList<Integer>();
+            finalPath.addAll(startToWaypoint);
+            finalPath.addAll(waypointToFinal);
+            pathAlgorithm.moveRobotbyPath(finalPath, map, true);
             System.out.println("finished");
 
     }

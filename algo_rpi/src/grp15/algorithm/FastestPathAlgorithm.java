@@ -23,8 +23,16 @@ public class FastestPathAlgorithm {
         this.solver = s;
     }
 
-    public void moveRobotToPosition(RobotOrientation target, MazeSolver mazeMap, boolean drawPath){
-        ArrayList<Integer> movePath = solver.getPathFromDistanceMap(solver.getDistanceMap(), solver.getRobot().getOrientation(), target);
+    public ArrayList<Integer> getFastestPath(RobotOrientation source, RobotOrientation target){
+        RobotOrientation originalPos = new RobotOrientation(solver.getRobot());
+        solver.getRobot().setPosRaw(source);
+        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap = solver.getDistanceMap();
+        ArrayList<Integer> res = solver.getPathFromDistanceMap(distanceMap, source, target);
+        solver.getRobot().setPosRaw(originalPos);
+        return res;
+    }
+
+    public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath){
         String res = movePathToSignalString(movePath);
 
         System.out.println("Move path strong code: " +res);
@@ -34,7 +42,7 @@ public class FastestPathAlgorithm {
                 for(int k = 0; k < 3; k++)
                     for(int l = 0; l < 3; l++) {
                         int dx = solver.getRobot().getPosX()+k; int dy = solver.getRobot().getPosY()+l;
-                        //if(solver.getMaze()[dx][dy].getColor() == CellColor.FREE) solver.getMaze()[dx][dy].setColor(CellColor.SPATH);
+                        if(solver.getMaze()[dx][dy].getColor() == CellColor.FREE) solver.getMaze()[dx][dy].setColor(CellColor.SPATH);
                     }
             }
             System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + movePath.get(j));
