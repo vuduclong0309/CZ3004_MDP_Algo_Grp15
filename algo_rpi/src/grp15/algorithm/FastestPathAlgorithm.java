@@ -6,10 +6,12 @@ import grp15.object.Robot;
 import grp15.object.RobotOrientation;
 import grp15.rpi.Comms;
 import grp15.simulator.MazeSolver;
+import grp15.util.MapDescriptor;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import static grp15.Main.communicator;
 import static grp15.object.Robot.*;
@@ -23,10 +25,11 @@ public class FastestPathAlgorithm {
 
     public void moveRobotToPosition(RobotOrientation target, MazeSolver mazeMap, boolean drawPath){
         ArrayList<Integer> movePath = solver.getPathFromDistanceMap(solver.getDistanceMap(), solver.getRobot().getOrientation(), target);
-        //String res = movePathToSignalString(movePath);
-        //System.out.println("Move path strong code: " +res);
-        //communicator.sendMsg(res, Comms.INSTRUCTIONS);
+        String res = movePathToSignalString(movePath);
+        mazeMap.getRobot().setPosRaw(target.getPosX(), target.getPosY(), target.getDirection());
 
+        System.out.println("Move path strong code: " +res);
+        communicator.sendMsg(res, Comms.INSTRUCTIONS);
         for(int j = 0; j < movePath.size(); j++){
             if(drawPath == true){
                 for(int k = 0; k < 3; k++)
@@ -36,14 +39,28 @@ public class FastestPathAlgorithm {
                     }
             }
             System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + movePath.get(j));
-            mazeMap.getRobot().moveRobot(movePath.get(j));
-            mazeMap.senseMap();
+
+            RobotOrientation tmp = new RobotOrientation(mazeMap.getRobot());
+            switch (movePath.get(j)){
+                case MOVE_FORWARD:
+                    tmp.moveForward();
+                    break;
+                case TURN_LEFT:
+                    tmp.turnLeft();
+                    break;
+                case TURN_RIGHT:
+                    tmp.turnRight();
+                    break;
+            }
+            solver.getRobot().setPosRaw(tmp.getPosX(), tmp.getPosY(), tmp.getDirection());
+
             try {
                 Thread.sleep(1000/Explorer.SPEED);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            updateRobotPosition();
             mazeMap.repaint();
         }
     }
@@ -112,5 +129,14 @@ public class FastestPathAlgorithm {
                 break;
         }
         return res;
+    }
+
+    public void updateRobotPosition(){
+        communicator.sendMsg(Explorer.finalMapAndroid + " " + toDirectionString(solver.getRobot().getDirection()) + " " + solver.getRobot().getPosY() + " " + solver.getRobot().getPosX(), Comms.MAP_STRINGS);
+        try{
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (Exception e){
+
+        }
     }
 }

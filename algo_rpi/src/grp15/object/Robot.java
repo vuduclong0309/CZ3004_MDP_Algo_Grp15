@@ -233,4 +233,10 @@ public class Robot {
             }
         }
     }
+
+    public void setPosRaw(int x, int y, int dir){
+        this.posX = x;
+        this.posY = y;
+        this.direction = dir;
+    }
 }

@@ -26,6 +26,7 @@ import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
 public class Explorer {
 
+    public static String finalMapAndroid = "";
     public double coverageThreshold = 0.5;
     public static int WAYPOINT_X = 5;
     public static int WAYPOINT_Y = 15;
@@ -215,6 +216,8 @@ public class Explorer {
         //String mapUpdate = MapDescriptor.toAndroid(map);
 
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
+        finalMapAndroid = MapDescriptor.toAndroid(map);
+
         communicator.sendMsg (finalMap[0] + " " + finalMap[1], Comms.FINAL_MAP);
         communicator.sendMsg("f", Comms.INSTRUCTIONS);
         //communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
@@ -222,6 +225,7 @@ public class Explorer {
 
     void startFastestPath(){
             map.getRobot().setPos(1, 1, NORTH, map);
+            map.senseMap();
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
