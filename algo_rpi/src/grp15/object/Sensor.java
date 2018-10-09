@@ -173,7 +173,8 @@ public class Sensor {
                     }
                 }
                 else{
-                    exploredArenaMap.getCell(nPosX, nPosY).setBlocked(false);
+                    if(exploredArenaMap.getCell(nPosX, nPosY).isBlocked())
+                        exploredArenaMap.getCell(nPosX, nPosY).setBlocked(false);
                 }
             }
         }
