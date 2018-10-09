@@ -26,7 +26,6 @@ public class FastestPathAlgorithm {
     public void moveRobotToPosition(RobotOrientation target, MazeSolver mazeMap, boolean drawPath){
         ArrayList<Integer> movePath = solver.getPathFromDistanceMap(solver.getDistanceMap(), solver.getRobot().getOrientation(), target);
         String res = movePathToSignalString(movePath);
-        mazeMap.getRobot().setPosRaw(target.getPosX(), target.getPosY(), target.getDirection());
 
         System.out.println("Move path strong code: " +res);
         communicator.sendMsg(res, Comms.INSTRUCTIONS);
@@ -35,7 +34,7 @@ public class FastestPathAlgorithm {
                 for(int k = 0; k < 3; k++)
                     for(int l = 0; l < 3; l++) {
                         int dx = solver.getRobot().getPosX()+k; int dy = solver.getRobot().getPosY()+l;
-                        if(solver.getMaze()[dx][dy].getColor() == CellColor.FREE) solver.getMaze()[dx][dy].setColor(CellColor.SPATH);
+                        //if(solver.getMaze()[dx][dy].getColor() == CellColor.FREE) solver.getMaze()[dx][dy].setColor(CellColor.SPATH);
                     }
             }
             System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + movePath.get(j));
