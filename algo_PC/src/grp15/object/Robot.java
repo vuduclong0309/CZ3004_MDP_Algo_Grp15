@@ -278,4 +278,27 @@ public class Robot {
     public int getTotalTurn(){
         return this.totalTurn;
     }
+
+    public void setPos(int x, int y, int dir, MazeSolver map){
+        this.posX = x;
+        this.posY = y;
+        this.direction = dir;
+        for(int i = 0 ; i < 3 ; i++){
+            for(int j = 0 ; j < 3; j++){
+                map.getMazeCell()[x + i][y + j].setExplored();
+            }
+        }
+    }
+
+    public void setPosRaw(int x, int y, int dir){
+        this.posX = x;
+        this.posY = y;
+        this.direction = dir;
+    }
+
+    public void setPosRaw(RobotOrientation target){
+        this.posX = target.getPosX();
+        this.posY = target.getPosY();
+        this.direction = target.getDirection();
+    }
 }

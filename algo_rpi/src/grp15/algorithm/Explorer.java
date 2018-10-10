@@ -28,8 +28,8 @@ public class Explorer {
 
     public static String finalMapAndroid = "";
     public double coverageThreshold = 0.5;
-    public static int WAYPOINT_X = 5;
-    public static int WAYPOINT_Y = 15;
+    public static int WAYPOINT_X = 3;
+    public static int WAYPOINT_Y = 11;
     public static int SPEED = 1000000;
     static DijkstraSolver solver;
     private MazeSolver map;
@@ -215,12 +215,13 @@ public class Explorer {
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
         pathAlgorithm.moveRobotbyPath(backToStart, map, false);
         //String mapUpdate = MapDescriptor.toAndroid(map);
+        map.senseMap();
+        communicator.sendMsg("f", Comms.INSTRUCTIONS);
 
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
         finalMapAndroid = MapDescriptor.toAndroid(map);
 
         communicator.sendMsg (finalMap[0] + " " + finalMap[1], Comms.FINAL_MAP);
-        communicator.sendMsg("f", Comms.INSTRUCTIONS);
         //communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
     }
 

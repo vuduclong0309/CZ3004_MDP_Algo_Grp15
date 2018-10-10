@@ -16,6 +16,8 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import static grp15.object.Cell.GRID_SIZE;
+import static grp15.object.Robot.NORTH;
+import static grp15.object.Robot.WEST;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.object.Robot.isValidPosition;
@@ -170,42 +172,44 @@ public class Explorer {
 
         System.out.println("Turn and Move" + map.getRobot().getTotalMove() + " " + map.getRobot().getTotalTurn());
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-        pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(1, 1), 0)), map, false);
+        ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
+        pathAlgorithm.moveRobotbyPath(backToStart, map, false);
+
     }
 
     void startFastestPath() {
-        if (map.coverage() <= coverageThreshold && timeout == false) {
-            MapDescriptor.generateMapDescriptor(map);
-            FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-            HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
-            distanceMap = solver.getDistanceMap();
+        map.getRobot().setPosRaw(1, 1, NORTH);
+        map.repaint();
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
+        distanceMap = solver.getDistanceMap();
 
-            HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
-            int minDistance = 10000;
-            int minWaypointDislocation = 100;
-            for (HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry : distanceMap.entrySet()) {
-                //System.out.println("entry"+entry.toString());
-                int nextPosX = entry.getKey().getKey().getKey();
-                int nextPosY = entry.getKey().getKey().getValue();
-                int direction = entry.getKey().getValue();
-                int distance = entry.getValue().getKey();
-                int dx = nextPosX - WAYPOINT_X;
-                int dy = nextPosY - WAYPOINT_Y;
-                int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
-                if (waypointDislocation > minWaypointDislocation) continue;
-                if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
-                    //System.out.println(nextPosMinDistance.toString());
-                    nextPosMinDistance = entry;
-                    minDistance = distance;
-                    minWaypointDislocation = waypointDislocation;
-                }
+        HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
+        int minDistance = 10000;
+        int minWaypointDislocation = 100;
+        for (HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry : distanceMap.entrySet()) {
+            //System.out.println("entry"+entry.toString());
+            int nextPosX = entry.getKey().getKey().getKey();
+            int nextPosY = entry.getKey().getKey().getValue();
+            int direction = entry.getKey().getValue();
+            int distance = entry.getValue().getKey();
+            int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
+            int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
+            if(waypointDislocation > minWaypointDislocation) continue;
+            if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
+                //System.out.println(nextPosMinDistance.toString());
+                nextPosMinDistance = entry;
+                minDistance = distance;
+                minWaypointDislocation = waypointDislocation;
             }
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation(nextPosMinDistance.getKey()), map, true);
-
-            pathAlgorithm.moveRobotToPosition(new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)), map, true);
-            System.out.println("finished");
-
         }
+        ArrayList<Integer> startToWaypoint = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
+        ArrayList<Integer> waypointToFinal = pathAlgorithm.getFastestPath(new RobotOrientation(nextPosMinDistance.getKey()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
+        ArrayList<Integer> finalPath = new ArrayList<Integer>();
+        finalPath.addAll(startToWaypoint);
+        finalPath.addAll(waypointToFinal);
+        pathAlgorithm.moveRobotbyPath(finalPath, map, true);
+        System.out.println("finished");
     }
 
     int falseSense(int posX, int posY, int direction, Cell[][] maze){

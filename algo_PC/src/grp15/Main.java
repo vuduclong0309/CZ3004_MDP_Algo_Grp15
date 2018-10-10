@@ -53,9 +53,10 @@ final public class Main
 
             public void actionPerformed(ActionEvent e) {
                 //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
-                bot = new Robot(1,1,0);
+                bot = new Robot(7,1,Robot.EAST);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
+                bot.setPos(7, 1, Robot.NORTH, mapSolver);
                 Explorer exp = new Explorer(mapSolver);
                 exp.setCoverageThreshold(coverage);
                 exp.setSpeed(speed);
