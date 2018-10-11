@@ -141,7 +141,7 @@ public class FastestPathAlgorithm {
     public void updateRobotPosition(){
         communicator.sendMsg(Explorer.finalMapAndroid + " " + toDirectionString(solver.getRobot().getDirection()) + " " + solver.getRobot().getPosY() + " " + solver.getRobot().getPosX(), Comms.MAP_STRINGS);
         try{
-            TimeUnit.MILLISECONDS.sleep(500);
+            TimeUnit.MILLISECONDS.sleep(300);
         } catch (Exception e){
 
         }

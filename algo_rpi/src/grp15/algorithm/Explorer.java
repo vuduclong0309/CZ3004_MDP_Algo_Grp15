@@ -218,7 +218,6 @@ public class Explorer {
         map.getRobot().setPos(1, 1, NORTH, map);
         map.repaint();
         communicator.sendMsg("f", Comms.INSTRUCTIONS);
-
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
         finalMapAndroid = MapDescriptor.toAndroid(map);
 

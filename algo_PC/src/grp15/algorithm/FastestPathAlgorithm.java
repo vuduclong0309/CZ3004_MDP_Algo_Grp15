@@ -141,7 +141,7 @@ public class FastestPathAlgorithm {
 
         for(int i = start.length() - 1; i>=0; i--){
             if(num == 0) break;
-            if(tmp[i] == 'l' || tmp[i] == 'r') continue;
+            if(tmp[i] == 'l' || tmp[i] == 'j') continue;
             tmp[i] = 'P';
             num--;
         }
