@@ -1,6 +1,7 @@
 package grp15;
 
 import grp15.algorithm.Explorer;
+import grp15.rpi.Comms;
 import grp15.simulator.MazeEditor;
 import grp15.object.Robot;
 import grp15.simulator.MazeSolver;
@@ -30,8 +31,10 @@ final public class Main
     private static int time;
     static double coverage = 1;
     static int speed = 10;
+    public static Comms communicator = Comms.getComm();
     public static void main(String[] args)
     {
+        communicator.openConnection();
         JFrame f = new JFrame();
         f.setTitle("Map editor ");
         f.setSize(new Dimension(MAZE_WIDTH*GRID_SIZE,MAZE_HEIGHT*GRID_SIZE));
@@ -53,10 +56,9 @@ final public class Main
 
             public void actionPerformed(ActionEvent e) {
                 //bot = new MDPRobot(Integer.parseInt(sensorFSTxt.getText()),Integer.parseInt(sensorFLTxt.getText()),Integer.parseInt(sensorLSTxt.getText()),Integer.parseInt(sensorLLTxt.getText()),Integer.parseInt(sensorRSTxt.getText()),Integer.parseInt(sensorRLTxt.getText()));
-                bot = new Robot(7,1,Robot.EAST);
+                bot = new Robot(1,1,0);
                 System.out.println("bot created!");
                 mapSolver = new MazeSolver(map, bot);
-                bot.setPos(7, 1, Robot.NORTH, mapSolver);
                 Explorer exp = new Explorer(mapSolver);
                 exp.setCoverageThreshold(coverage);
                 exp.setSpeed(speed);

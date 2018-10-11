@@ -1,0 +1,43 @@
+Part 1: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+Part 2: 01c00000000000000001f84000800100000003c000800004000800708880f00000000000080
+<error if it happen>
+<any abnormal robot movement>
+<not fully explore>
+<completed or not>
+
+Turn and Move94 30
+Part 1: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+Part 2: 01c00000000000000001f84000800100000003c08081000200080020f880100000000000000
+no error
+no abnormal robot movement
+fully explored
+complete fastest
+
+Turn and Move112 32
+Part 1: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+Part 2: 000000800000000040001001000000000102002000004000002000000000102000000000000
+no error 
+no abnormal robot movement
+fully explored
+complete fastest
+
+Turn and Move116 33
+Part 1: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+Part 2: 000000000200000020000800000000010000408800010006000400000800000002000000000
+no error
+no abnormal robot movement
+fully explored
+complete fastest
+
+Turn and Move143 45
+Part 1: ffffffffffffffffffffffffffffffffffffff3ffe5fffffffffffffffffffffffffffffffff
+Part 2: 010000000000e000000000008000000003000800202500000400000000040000000800000
+no error 
+no abnormal robot movement
+fully explored 
+complete fastest
+
+Part 1: ffffffffffffffffffffffffffffff887f10fe00f801800300000000000000000007000e001f
+Part 2: 0000000000000800c000000042d40405048000
+note: no way to target
+map for sensor explore testing

@@ -4,13 +4,16 @@ import grp15.algorithm.DijkstraSolver;
 import grp15.object.CellColor;
 import grp15.object.Robot;
 import grp15.object.RobotOrientation;
+import grp15.rpi.Comms;
 import grp15.simulator.MazeSolver;
+import grp15.util.MapDescriptor;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import static grp15.Main.communicator;
 import static grp15.object.Robot.*;
 
 public class FastestPathAlgorithm {
@@ -30,9 +33,10 @@ public class FastestPathAlgorithm {
     }
 
     public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath){
-        String res = movePathToSignalString(movePath);
-        res = pConvert(res, 2);
-        System.out.println("Move path strong code: " +res);
+        String tmp11 = movePathToSignalString(movePath);
+        String res = pConvert(tmp11, 2);
+        System.out.println("Move path strong code: " +tmp11 + " " + res);
+        communicator.sendMsg(res, Comms.INSTRUCTIONS);
         for(int j = 0; j < movePath.size(); j++){
             if(drawPath == true){
                 for(int k = 0; k < 3; k++)
@@ -63,6 +67,7 @@ public class FastestPathAlgorithm {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            updateRobotPosition();
             mazeMap.repaint();
         }
     }
@@ -131,6 +136,15 @@ public class FastestPathAlgorithm {
                 break;
         }
         return res;
+    }
+
+    public void updateRobotPosition(){
+        communicator.sendMsg(Explorer.finalMapAndroid + " " + toDirectionString(solver.getRobot().getDirection()) + " " + solver.getRobot().getPosY() + " " + solver.getRobot().getPosX(), Comms.MAP_STRINGS);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        } catch (Exception e){
+
+        }
     }
 
     public static String pConvert(String start, int num){

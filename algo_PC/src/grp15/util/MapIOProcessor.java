@@ -6,7 +6,7 @@ import grp15.simulator.MazeEditor;
 
 
 public class MapIOProcessor {
-    /*
+	/*
      * Reads input text file from storage that uses binary to indicate if a cell on the arena is an obstacle.
      * */
     public static void readMapFileFromDisk(File file, MazeEditor mz) {

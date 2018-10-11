@@ -1,7 +1,9 @@
 package grp15.algorithm;
 
 import grp15.object.Cell;
+import grp15.object.Robot;
 import grp15.object.RobotOrientation;
+import grp15.rpi.Comms;
 import grp15.simulator.MazeSolver;
 import grp15.util.MapDescriptor;
 import javafx.util.Pair;
@@ -12,26 +14,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
+import static grp15.Main.communicator;
 import static grp15.object.Cell.GRID_SIZE;
-import static grp15.object.Robot.NORTH;
-import static grp15.object.Robot.WEST;
+import static grp15.object.CellColor.FREE;
+import static grp15.object.CellColor.WAYPOINT;
+import static grp15.object.Robot.*;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
-import static grp15.object.Robot.isValidPosition;
 
 public class Explorer {
 
+    public static String finalMapAndroid = "";
     public double coverageThreshold = 0.5;
-    public static int WAYPOINT_X = 5;
-    public static int WAYPOINT_Y = 14;
-    public static int SPEED = 10;
+    public static int WAYPOINT_X = 3;
+    public static int WAYPOINT_Y = 11;
+    public static int SPEED = 1000000;
     static DijkstraSolver solver;
     private MazeSolver map;
-    private JFrame frame;
     boolean startFP = false;
+    private JFrame frame;
+
     boolean visited [][][] = new boolean[MAZE_HEIGHT][MAZE_WIDTH][4];
     private boolean timeout = false;
 
@@ -40,17 +44,13 @@ public class Explorer {
     }
 
     public void launch(){
-        final Thread thread = new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             public void run() {
                 frame = new JFrame("Explorer");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.getContentPane().add(BorderLayout.CENTER, map);
                 frame.setResizable(false);
                 frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+1), MAZE_HEIGHT * (GRID_SIZE+2)));
-                //setting the window location
-                frame.setLocationByPlatform(false);
-                frame.setLocation(0, 0);
-                frame.setVisible(true);
                 JButton startFastestPathButton = new JButton ("Start Fastest Path");
                 startFastestPathButton.addActionListener(new ActionListener() {
 
@@ -61,8 +61,35 @@ public class Explorer {
                 });
 
                 frame.getContentPane().add(startFastestPathButton, BorderLayout.SOUTH);
-
+                //setting the window location
+                frame.setLocationByPlatform(false);
+                frame.setLocation(0, 0);
+                frame.setVisible(true);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                
+                while(true){
+                    String msg = communicator.recvMsg();
+                    String msgArr[] = msg.split(" ");
+                    if (msgArr[0].equals(Comms.START_EXPLORE)){
+                        switch (msgArr[3]){
+                            case "NORTH":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.NORTH, map);
+                                break;
+                            case "SOUTH":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.SOUTH, map);
+                                break;
+                            case "EAST":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.EAST, map);
+                                break;
+                            case "WEST":
+                                map.getRobot().setPos(Integer.parseInt(msgArr[1]), Integer.parseInt(msgArr[2]), Robot.WEST, map);
+                                break;
+                        }
+                        break;
+                    }
+                }
                 startExploration();
+
                 while(startFP == false) {
                     try {
                         System.out.println("waiting for fastest path button");
@@ -72,7 +99,19 @@ public class Explorer {
 
                     }
                 };
+                while(true){
+                    String msg = communicator.recvMsg();
+                    System.out.println("test1");
+                    String msgArr[] = msg.split(" ");
+                    if (msgArr[0].equals(Comms.START_FASTEST_PATH)){
+                        setWayPoint(Integer.parseInt(msgArr[2]) + 1, Integer.parseInt(msgArr[1]) + 1);
+                        break;
+                    }
+                    else continue;
+                }
+
                 startFastestPath();
+
             }
         }  );
         thread.setPriority(Thread.NORM_PRIORITY);
@@ -81,8 +120,9 @@ public class Explorer {
     }
 
     public void startExploration(){
-
+        communicator.sendMsg("o", "");
         map.senseMap();
+        MapDescriptor.generateMapDescriptor(map);
         this.map.repaint();
         int i = 0;
         boolean init = true;
@@ -95,6 +135,7 @@ public class Explorer {
                 System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
                 map.getRobot().moveRobot(path.get(j));
                 map.senseMap();
+                MapDescriptor.generateMapDescriptor(map);
                 //for(int k=1;k<=100;k++) System.out.println("pause thread");
                 this.map.repaint();
                 try {
@@ -105,26 +146,25 @@ public class Explorer {
                 }
             }
         }while(this.map.getRobot().getPosX() != 1 || this.map.getRobot().getPosY() != 1);
-        System.out.println("wall hug done");
+        System.out.println("done");
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
-        solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
+        solver = new DijkstraSolver(map.getMazeCell(), TURN_COST, MOVE_COST, this.map.getRobot());
         System.out.println(map.coverage());
-        do{
+        /*do{
             System.out.println("iteration"+i);
             i++;
             distanceMap = solver.getDistanceMap();
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             double gridIndex = 0;
             for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: distanceMap.entrySet()){
-
+                //System.out.println("entry"+entry.toString());
                 int nextPosX = entry.getKey().getKey().getKey();
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
                 int newIndex = falseSense(nextPosX, nextPosY, direction, map.getMazeCell()); // == 0 && !(nextPosX == 1 && nextPosY == 1)) continue;
                 //init = false;
-                System.out.println("entry"+entry.toString() + "@" + newIndex);
                 if(newIndex == 0) continue;
                 if (nextPosMinDistance == null){
 
@@ -153,6 +193,7 @@ public class Explorer {
                 System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + path.get(j));
                 map.getRobot().moveRobot(path.get(j));
                 map.senseMap();
+                MapDescriptor.generateMapDescriptor(map);
                 //for(int k=1;k<=100;k++) System.out.println("pause thread");
                 this.map.repaint();
                 visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
@@ -168,48 +209,54 @@ public class Explorer {
             }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(timeout == false);
+        }while(timeout == false);*/
 
-        System.out.println("Turn and Move" + map.getRobot().getTotalMove() + " " + map.getRobot().getTotalTurn());
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
         pathAlgorithm.moveRobotbyPath(backToStart, map, false);
+        //String mapUpdate = MapDescriptor.toAndroid(map);
+        map.getRobot().setPos(1, 1, NORTH, map);
+        map.repaint();
+        communicator.sendMsg("f", Comms.INSTRUCTIONS);
+        String [] finalMap = MapDescriptor.generateMapDescriptor(map);
+        finalMapAndroid = MapDescriptor.toAndroid(map);
 
+        communicator.sendMsg (finalMap[0] + " " + finalMap[1], Comms.FINAL_MAP);
+        //communicator.sendMsg(mapUpdate + " " +this.getDirection() + " " + this.getPosX() + " " + this.getPosY(), Comms.MAP_STRINGS);
     }
 
-    void startFastestPath() {
-        map.getRobot().setPosRaw(1, 1, NORTH);
-        map.repaint();
-        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
-        distanceMap = solver.getDistanceMap();
+    void startFastestPath(){
+            FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+            HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
+            distanceMap = solver.getDistanceMap();
 
-        HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
-        int minDistance = 10000;
-        int minWaypointDislocation = 100;
-        for (HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry : distanceMap.entrySet()) {
-            //System.out.println("entry"+entry.toString());
-            int nextPosX = entry.getKey().getKey().getKey();
-            int nextPosY = entry.getKey().getKey().getValue();
-            int direction = entry.getKey().getValue();
-            int distance = entry.getValue().getKey();
-            int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
-            int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
-            if(waypointDislocation > minWaypointDislocation) continue;
-            if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
-                //System.out.println(nextPosMinDistance.toString());
-                nextPosMinDistance = entry;
-                minDistance = distance;
-                minWaypointDislocation = waypointDislocation;
+            HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
+            int minDistance = 10000;
+            int minWaypointDislocation = 100;
+            for (HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry : distanceMap.entrySet()) {
+                //System.out.println("entry"+entry.toString());
+                int nextPosX = entry.getKey().getKey().getKey();
+                int nextPosY = entry.getKey().getKey().getValue();
+                int direction = entry.getKey().getValue();
+                int distance = entry.getValue().getKey();
+                int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
+                int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
+                if(waypointDislocation > minWaypointDislocation) continue;
+                if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
+                    //System.out.println(nextPosMinDistance.toString());
+                    nextPosMinDistance = entry;
+                    minDistance = distance;
+                    minWaypointDislocation = waypointDislocation;
+                }
             }
-        }
-        ArrayList<Integer> startToWaypoint = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
-        ArrayList<Integer> waypointToFinal = pathAlgorithm.getFastestPath(new RobotOrientation(nextPosMinDistance.getKey()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
-        ArrayList<Integer> finalPath = new ArrayList<Integer>();
-        finalPath.addAll(startToWaypoint);
-        finalPath.addAll(waypointToFinal);
-        pathAlgorithm.moveRobotbyPath(finalPath, map, true);
-        System.out.println("finished");
+            ArrayList<Integer> startToWaypoint = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
+            ArrayList<Integer> waypointToFinal = pathAlgorithm.getFastestPath(new RobotOrientation(nextPosMinDistance.getKey()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
+            ArrayList<Integer> finalPath = new ArrayList<Integer>();
+            finalPath.addAll(startToWaypoint);
+            finalPath.addAll(waypointToFinal);
+            pathAlgorithm.moveRobotbyPath(finalPath, map, true);
+            System.out.println("finished");
+
     }
 
     int falseSense(int posX, int posY, int direction, Cell[][] maze){
@@ -239,5 +286,13 @@ public class Explorer {
 
     public void setCoverageThreshold(double input){
         this.coverageThreshold = input;
+    }
+
+    public void setWayPoint(int wx, int wy){
+        map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].setColor(FREE);
+        this.WAYPOINT_X = wx;
+        this.WAYPOINT_Y = wy;
+        map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].setColor(WAYPOINT);
+        map.repaint();
     }
 }

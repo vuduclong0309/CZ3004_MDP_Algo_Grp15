@@ -2,7 +2,7 @@ package grp15.object;
 
 import grp15.simulator.MazeEditor;
 import grp15.simulator.MazeSolver;
-import java.util.ArrayList;
+
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
@@ -17,17 +17,16 @@ public class Robot {
     public static final int TURN_RIGHT = 7;
     public static final int STOP = 8;
 
-    public static int sensorFShortest = 1;
-    public static int sensorFLongest = 1;
-    public static int sensorLShortest = 1;
-    public static int sensorLLongest = 1;
-    public static int sensorRShortest = 1;
-    public static int sensorRLongest = 3;
+    private int sensorFShortest = 1;
+    private int sensorFLongest = 3;
+    private int sensorLShortest = 1;
+    private int sensorLLongest = 3;
+    private int sensorRShortest = 2;
+    private int sensorRLongest = 5;
 
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
-    int totalMove = 0;
-    int totalTurn = 0;
+
     private int posX, posY;
     private int direction = NORTH;
 
@@ -99,15 +98,12 @@ public class Robot {
         switch (signal){
             case MOVE_FORWARD:
                 this.moveForward();
-                totalMove++;
                 break;
             case TURN_LEFT:
                 this.turnLeft();
-                totalTurn++;
                 break;
             case TURN_RIGHT:
                 this.turnRight();
-                totalTurn++;
                 break;
         }
     }
@@ -147,15 +143,15 @@ public class Robot {
                         break;
                     case SOUTH:
                         if (this.posX - i > 0) {
-                            map.getMazeCell()[this.posX - i][this.posY + 2 - j].setExplored();
-                            wall[j] = map.getMazeCell()[this.posX - i][this.posY + 2 - j].isBlocked();
+                            map.getMazeCell()[this.posX - i][this.posY + j].setExplored();
+                            wall[j] = map.getMazeCell()[this.posX - i][this.posY + j].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case EAST:
                         if (this.posY + 2 + i <= MAZE_WIDTH - 1) {
-                            map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].setExplored();
-                            wall[j] = map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].isBlocked();
+                            map.getMazeCell()[this.posX + j][this.posY + 2 + i].setExplored();
+                            wall[j] = map.getMazeCell()[this.posX + j][this.posY + 2 + i].isBlocked();
                         } else
                             wall[j] = true;
                         break;
@@ -175,36 +171,36 @@ public class Robot {
         //this part goes according to position and number of sensors
         //we have 1 long right sensor at first row of robot
         boolean wall[] = new boolean[3];
-        wall[0] = false; wall[1] = true; wall[2] = true;
+        wall[0] = true; wall[1] = true; wall[2] = false;
         int i;
-        for (i = 1; i <= this.sensorRLongest; i++) {
+        for (i = sensorRShortest; i <= this.sensorRLongest; i++) {
             for(int j = 0; j < 3; j++) {
                 if(wall[j] == true) continue;
                 switch (this.direction) {
                     case WEST:
                         if (this.posX + 2 + i <= MAZE_HEIGHT - 1) {
-                            if(i >= sensorRShortest) map.getMazeCell()[this.posX + 2 + i][this.posY + j].setExplored();
+                            map.getMazeCell()[this.posX + 2 + i][this.posY + j].setExplored();
                             wall[j] = map.getMazeCell()[this.posX + 2 + i][this.posY + j].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case EAST:
                         if (this.posX - i >= 0) {
-                            if(i >= sensorRShortest) map.getMazeCell()[this.posX - i][this.posY + 2 - j].setExplored();
-                            wall[j] = map.getMazeCell()[this.posX - i][this.posY + 2 - j].isBlocked();
+                            map.getMazeCell()[this.posX - i][this.posY + j].setExplored();
+                            wall[j] = map.getMazeCell()[this.posX - i][this.posY + j].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case NORTH:
                         if (this.posY + 2 + i <= MAZE_WIDTH - 1) {
-                            if(i >= sensorRShortest) map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].setExplored();
-                            wall[j] = map.getMazeCell()[this.posX + 2 - j][this.posY + 2 + i].isBlocked();
+                            map.getMazeCell()[this.posX + j][this.posY + 2 + i].setExplored();
+                            wall[j] = map.getMazeCell()[this.posX + j][this.posY + 2 + i].isBlocked();
                         } else
                             wall[j] = true;
                         break;
                     case SOUTH:
                         if (this.posY - i > 0) {
-                            if(i >= sensorRShortest) map.getMazeCell()[this.posX + j][this.posY - i].setExplored();
+                            map.getMazeCell()[this.posX + j][this.posY - i].setExplored();
                             wall[j] = map.getMazeCell()[this.posX + j][this.posY - i].isBlocked();
                         } else
                             wall[j] = true;
@@ -218,7 +214,7 @@ public class Robot {
         //this part goes according to position and number of sensors
         //we have 1 left short sensor at the back left
         boolean wall[] = new boolean[3];
-        wall[0] = false; wall[1] = true; wall[2] = false;
+        wall[0] = false; wall[1] = true; wall[2] = true;
         int i;
         for (i = sensorLShortest; i <= this.sensorLLongest; i++) {
             for(int j = 0; j < 3; j++) {
@@ -226,8 +222,8 @@ public class Robot {
                 switch (this.direction) {
                     case EAST:
                         if (this.posX + 2 + i <= MAZE_HEIGHT - 1) {
-                            map.getMazeCell()[this.posX + 2 + i][this.posY + 2 - j].setExplored();
-                            wall[j] = map.getMazeCell()[this.posX + 2 + i][this.posY + 2 - j].isBlocked();
+                            map.getMazeCell()[this.posX + 2 + i][this.posY + j].setExplored();
+                            wall[j] = map.getMazeCell()[this.posX + 2 + i][this.posY + j].isBlocked();
                         } else
                             wall[j] = true;
                         break;
@@ -247,8 +243,8 @@ public class Robot {
                         break;
                     case NORTH:
                         if (this.posY - i > 0) {
-                            map.getMazeCell()[this.posX + 2 - j][this.posY - i].setExplored();
-                            wall[j] = map.getMazeCell()[this.posX + 2 - j][this.posY - i].isBlocked();
+                            map.getMazeCell()[this.posX + j][this.posY - i].setExplored();
+                            wall[j] = map.getMazeCell()[this.posX + j][this.posY - i].isBlocked();
                         } else
                             wall[j] = true;
                         break;
@@ -269,36 +265,5 @@ public class Robot {
             for(int j = 0; j < 2; j++) if(MazeEditor.isValidPosition(x + i, y + j) == false) return false;
         }
         return true;
-    }
-
-    public int getTotalMove(){
-        return this.totalMove;
-    }
-
-    public int getTotalTurn(){
-        return this.totalTurn;
-    }
-
-    public void setPos(int x, int y, int dir, MazeSolver map){
-        this.posX = x;
-        this.posY = y;
-        this.direction = dir;
-        for(int i = 0 ; i < 3 ; i++){
-            for(int j = 0 ; j < 3; j++){
-                map.getMazeCell()[x + i][y + j].setExplored();
-            }
-        }
-    }
-
-    public void setPosRaw(int x, int y, int dir){
-        this.posX = x;
-        this.posY = y;
-        this.direction = dir;
-    }
-
-    public void setPosRaw(RobotOrientation target){
-        this.posX = target.getPosX();
-        this.posY = target.getPosY();
-        this.direction = target.getDirection();
     }
 }

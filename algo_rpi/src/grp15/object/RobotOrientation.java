@@ -328,7 +328,7 @@ public class RobotOrientation {
     //method for a full sensor
     public int falseSenseSensorData(MazeSolver map) {
         return this.falseSenseFrontSensorData(map)
-        + this.falseSenseLeftSensorData(map)
-        + this.falseSenseRightSensorData(map);
+                + this.falseSenseLeftSensorData(map)
+                + this.falseSenseRightSensorData(map);
     }
 }
