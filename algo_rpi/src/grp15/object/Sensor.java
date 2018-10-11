@@ -161,15 +161,20 @@ public class Sensor {
                 exploredArenaMap.getCell(nPosX, nPosY).setExplored();
                 if(i==sensorVal) {
                     System.out.println("Set wall " + nPosX + " " + nPosY);
-                    exploredArenaMap.getCell(nPosX, nPosY).setBlocked(true);
-                    for(int dx = -1; dx <= 1; dx ++){
-                        for(int dy = -1; dy <= 1; dy ++){
-                            if(dx == 0 && dy == 0) continue;
-                            if(nPosX + dx <= 0 || nPosX + dx >= MAZE_HEIGHT - 1) continue;
-                            if(nPosY + dy <= 0 || nPosY + dy >= MAZE_WIDTH - 1) continue;
-                            //System.out.println("set vwall " + (nPosX + dx) + " " + (nPosY + dy));
-                            exploredArenaMap.getCell(nPosX + dx, nPosY + dy).setVirtualWall(true);
+                    if((exploredArenaMap.getCell(nPosX, nPosY).isGoal() || exploredArenaMap.getCell(nPosX, nPosY).isStart())==false){
+                        exploredArenaMap.getCell(nPosX, nPosY).setBlocked(true);
+                        for(int dx = -1; dx <= 1; dx ++){
+                            for(int dy = -1; dy <= 1; dy ++){
+                                if(dx == 0 && dy == 0) continue;
+                                if(nPosX + dx <= 0 || nPosX + dx >= MAZE_HEIGHT - 1) continue;
+                                if(nPosY + dy <= 0 || nPosY + dy >= MAZE_WIDTH - 1) continue;
+                                //System.out.println("set vwall " + (nPosX + dx) + " " + (nPosY + dy));
+                                exploredArenaMap.getCell(nPosX + dx, nPosY + dy).setVirtualWall(true);
+                            }
                         }
+                    }
+                    else{
+                        System.out.println("Object is start/end zone, not set");
                     }
                 }
                 else{
