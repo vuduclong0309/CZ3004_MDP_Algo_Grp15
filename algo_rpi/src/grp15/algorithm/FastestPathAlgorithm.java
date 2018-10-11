@@ -33,9 +33,9 @@ public class FastestPathAlgorithm {
     }
 
     public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath){
-        String res = movePathToSignalString(movePath);
-
-        System.out.println("Move path strong code: " +res);
+        String tmp11 = movePathToSignalString(movePath);
+        String res = pConvert(tmp11, 2);
+        System.out.println("Move path strong code: " +tmp11 + " " + res);
         communicator.sendMsg(res, Comms.INSTRUCTIONS);
         for(int j = 0; j < movePath.size(); j++){
             if(drawPath == true){
@@ -145,5 +145,24 @@ public class FastestPathAlgorithm {
         } catch (Exception e){
 
         }
+    }
+
+    public static String pConvert(String start, int num){
+        char tmp[] = new char[start.length()];
+        for(int i = 0; i<start.length(); i++){
+            tmp[i] = start.charAt(i);
+        }
+
+        for(int i = start.length() - 1; i>=0; i--){
+            if(num == 0) break;
+            if(tmp[i] == 'l' || tmp[i] == 'j') continue;
+            tmp[i] = 'P';
+            num--;
+        }
+        String res = "";
+        for(int i = 0; i<start.length(); i++){
+            res+=tmp[i];
+        }
+        return res;
     }
 }

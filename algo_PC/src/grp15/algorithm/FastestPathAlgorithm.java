@@ -31,7 +31,7 @@ public class FastestPathAlgorithm {
 
     public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath){
         String res = movePathToSignalString(movePath);
-
+        res = pConvert(res, 2);
         System.out.println("Move path strong code: " +res);
         for(int j = 0; j < movePath.size(); j++){
             if(drawPath == true){
@@ -129,6 +129,25 @@ public class FastestPathAlgorithm {
             case 20:
                 res+="J";
                 break;
+        }
+        return res;
+    }
+
+    public static String pConvert(String start, int num){
+        char tmp[] = new char[start.length()];
+        for(int i = 0; i<start.length(); i++){
+            tmp[i] = start.charAt(i);
+        }
+
+        for(int i = start.length() - 1; i>=0; i--){
+            if(num == 0) break;
+            if(tmp[i] == 'l' || tmp[i] == 'r') continue;
+            tmp[i] = 'P';
+            num--;
+        }
+        String res = "";
+        for(int i = 0; i<start.length(); i++){
+            res+=tmp[i];
         }
         return res;
     }

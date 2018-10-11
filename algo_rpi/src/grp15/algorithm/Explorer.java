@@ -151,7 +151,7 @@ public class Explorer {
 
         solver = new DijkstraSolver(map.getMazeCell(), TURN_COST, MOVE_COST, this.map.getRobot());
         System.out.println(map.coverage());
-        do{
+        /*do{
             System.out.println("iteration"+i);
             i++;
             distanceMap = solver.getDistanceMap();
@@ -209,13 +209,14 @@ public class Explorer {
             }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(timeout == false);
+        }while(timeout == false);*/
 
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
         pathAlgorithm.moveRobotbyPath(backToStart, map, false);
         //String mapUpdate = MapDescriptor.toAndroid(map);
-        map.senseMap();
+        map.getRobot().setPos(1, 1, NORTH, map);
+        map.repaint();
         communicator.sendMsg("f", Comms.INSTRUCTIONS);
 
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
@@ -226,8 +227,6 @@ public class Explorer {
     }
 
     void startFastestPath(){
-            map.getRobot().setPos(1, 1, NORTH, map);
-            map.repaint();
             FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
