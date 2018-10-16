@@ -2,6 +2,7 @@ package grp15.algorithm;
 
 import grp15.object.Cell;
 import grp15.object.RobotOrientation;
+import grp15.rpi.Comms;
 import grp15.simulator.MazeSolver;
 import grp15.util.MapDescriptor;
 import javafx.util.Pair;
@@ -25,8 +26,8 @@ import static grp15.object.Robot.isValidPosition;
 public class Explorer {
 
     public double coverageThreshold = 0.5;
-    public static int WAYPOINT_X = 5;
-    public static int WAYPOINT_Y = 14;
+    public static int WAYPOINT_X = 8;
+    public static int WAYPOINT_Y = 8;
     public static int SPEED = 10;
     static DijkstraSolver solver;
     private MazeSolver map;
@@ -89,7 +90,9 @@ public class Explorer {
 
         LeftWallHuggingSolver wallHuggingSolver = new LeftWallHuggingSolver(map.getMazeCell(), this.map.getRobot());
         do{
-            ArrayList<Integer> path = wallHuggingSolver.getMove();
+            ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
+            String signal = FastestPathAlgorithm.movePathToSignalString(path) + 'o';
+            System.out.println("Signal String: " + signal);
             for(int j = 0; j < path.size(); j++){
                 visited[wallHuggingSolver.getRobot().getPosX()][wallHuggingSolver.getRobot().getPosY()][wallHuggingSolver.getRobot().getDirection()] = true;
                 System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
@@ -104,13 +107,15 @@ public class Explorer {
                     e.printStackTrace();
                 }
             }
-        }while(this.map.getRobot().getPosX() != 1 || this.map.getRobot().getPosY() != 1);
+            System.out.println("New Robot Pos " + map.getRobot().getOrientation().toPairFormat().toString());
+        }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3)));
         System.out.println("wall hug done");
+
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
 
         solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
         System.out.println(map.coverage());
-        do{
+        /*do{
             System.out.println("iteration"+i);
             i++;
             distanceMap = solver.getDistanceMap();
@@ -130,14 +135,14 @@ public class Explorer {
 
                     if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
-                        gridIndex = newIndex;
+                        gridIndex = (double)(newIndex*newIndex)/(distance*distance*distance*distance);
                     }
-                } else if (gridIndex < (double)(newIndex*newIndex)/distance){
+                } else if (gridIndex < (double)(newIndex*newIndex)/(distance*distance*distance*distance)){
                     //System.out.println(nextPosMinDistance.toString());
 
                     if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
-                        gridIndex = (double)(newIndex*newIndex)/distance;
+                        gridIndex = (double)(newIndex*newIndex)/(distance*distance*distance*distance);
                     }
                 }
             }
@@ -168,8 +173,11 @@ public class Explorer {
             }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(timeout == false);
+        }while(timeout == false);*/
 
+        String [] finalMap = MapDescriptor.generateMapDescriptor(map);
+        String finalMapAndroid = MapDescriptor.toAndroid(map);
+        System.out.println(Comms.FINAL_MAP + " " + finalMap[0] + "\n" + finalMap[1]);
         System.out.println("Turn and Move" + map.getRobot().getTotalMove() + " " + map.getRobot().getTotalTurn());
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));

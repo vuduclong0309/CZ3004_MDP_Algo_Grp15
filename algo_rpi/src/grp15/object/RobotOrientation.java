@@ -104,6 +104,20 @@ public class RobotOrientation {
         return this;
     }
 
+    public void moveOrientation(int signal){
+        switch (signal){
+            case MOVE_FORWARD:
+                this.moveForward();
+                break;
+            case TURN_LEFT:
+                this.turnLeft();
+                break;
+            case TURN_RIGHT:
+                this.turnRight();
+                break;
+        }
+    }
+
     public Pair<Pair<Integer, Integer>, Integer> toPairFormat(){
         return new Pair(new Pair(posX,posY),direction);
     }

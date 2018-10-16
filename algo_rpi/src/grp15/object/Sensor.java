@@ -132,7 +132,8 @@ public class Sensor {
                             break;
                     }
                     System.out.println("explore" + nPosX + " " + nPosY);
-                    exploredArenaMap.getCell(nPosX, nPosY).setExplored();
+                    if(exploredArenaMap.getCell(nPosX, nPosY).isBlocked())
+                        exploredArenaMap.getCell(nPosX, nPosY).setBlocked(false);
                 }
             }
         }

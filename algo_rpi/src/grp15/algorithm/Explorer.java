@@ -126,10 +126,14 @@ public class Explorer {
         this.map.repaint();
         int i = 0;
         boolean init = true;
-
+        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
+        solver = new DijkstraSolver(map.getMazeCell(), TURN_COST, MOVE_COST, this.map.getRobot());
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
         LeftWallHuggingSolver wallHuggingSolver = new LeftWallHuggingSolver(map.getMazeCell(), this.map.getRobot());
+
+        //Single move mode
         do{
-            ArrayList<Integer> path = wallHuggingSolver.getMove();
+            ArrayList<Integer> path = wallHuggingSolver.getMove(map, new RobotOrientation(map.getRobot()));
             for(int j = 0; j < path.size(); j++){
                 visited[wallHuggingSolver.getRobot().getPosX()][wallHuggingSolver.getRobot().getPosY()][wallHuggingSolver.getRobot().getDirection()] = true;
                 System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
@@ -145,11 +149,24 @@ public class Explorer {
                     e.printStackTrace();
                 }
             }
-        }while(this.map.getRobot().getPosX() != 1 || this.map.getRobot().getPosY() != 1);
-        System.out.println("done");
-        HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
+        }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3)));
+        //End of single mode
 
-        solver = new DijkstraSolver(map.getMazeCell(), TURN_COST, MOVE_COST, this.map.getRobot());
+        /*
+        //Burst Mode
+
+        do{
+            ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
+            String signal = FastestPathAlgorithm.movePathToSignalString(path) + 'o';
+            System.out.println("Signal String: " + signal);
+            pathAlgorithm.moveRobotbyPath(path, map, false, false);
+            map.senseMap();
+        }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3)));
+        //End of burst mode
+        */
+        System.out.println("wall hug done");
+
+        System.out.println("done");
         System.out.println(map.coverage());
         /*do{
             System.out.println("iteration"+i);
@@ -211,9 +228,9 @@ public class Explorer {
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(timeout == false);*/
 
-        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
-        pathAlgorithm.moveRobotbyPath(backToStart, map, false);
+        pathAlgorithm.moveRobotbyPath(backToStart, map, false, true);
         //String mapUpdate = MapDescriptor.toAndroid(map);
         map.getRobot().setPos(1, 1, NORTH, map);
         map.repaint();
@@ -265,7 +282,7 @@ public class Explorer {
         else {
             finalPath = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
         }
-        pathAlgorithm.moveRobotbyPath(finalPath, map, true);
+        pathAlgorithm.moveRobotbyPath(finalPath, map, true, true);
         System.out.println("finished");
 
     }

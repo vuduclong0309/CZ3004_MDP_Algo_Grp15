@@ -32,10 +32,12 @@ public class FastestPathAlgorithm {
         return res;
     }
 
-    public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath){
+    public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath, boolean pConvert){
         String tmp11 = movePathToSignalString(movePath);
-        String res = pConvert(tmp11, 2);
-        System.out.println("Move path strong code: " +tmp11 + " " + res);
+        String res;
+        if(pConvert) res = pConvert(tmp11, 2);
+        else res = tmp11;
+        System.out.println("Move path string code: " +tmp11 + " " + res);
         communicator.sendMsg(res, Comms.INSTRUCTIONS);
         for(int j = 0; j < movePath.size(); j++){
             if(drawPath == true){
