@@ -218,6 +218,11 @@ public class Explorer {
         map.getRobot().setPos(1, 1, NORTH, map);
         map.repaint();
         communicator.sendMsg("f", Comms.INSTRUCTIONS);
+        try{
+            TimeUnit.SECONDS.sleep(1);
+        } catch (Exception e){
+
+        }
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
         finalMapAndroid = MapDescriptor.toAndroid(map);
 
@@ -226,7 +231,9 @@ public class Explorer {
     }
 
     void startFastestPath(){
-            FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        ArrayList<Integer> finalPath = new ArrayList<Integer>();
+        FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
+        if(map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].isExplored() == true) {
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
 
@@ -239,9 +246,10 @@ public class Explorer {
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
-                int dx = nextPosX - WAYPOINT_X; int dy = nextPosY - WAYPOINT_Y;
+                int dx = nextPosX - WAYPOINT_X;
+                int dy = nextPosY - WAYPOINT_Y;
                 int waypointDislocation = Math.abs(dx + 1) + Math.abs(dy + 1);
-                if(waypointDislocation > minWaypointDislocation) continue;
+                if (waypointDislocation > minWaypointDislocation) continue;
                 if (waypointDislocation < minWaypointDislocation || minDistance > distance) {
                     //System.out.println(nextPosMinDistance.toString());
                     nextPosMinDistance = entry;
@@ -251,11 +259,14 @@ public class Explorer {
             }
             ArrayList<Integer> startToWaypoint = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
             ArrayList<Integer> waypointToFinal = pathAlgorithm.getFastestPath(new RobotOrientation(nextPosMinDistance.getKey()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
-            ArrayList<Integer> finalPath = new ArrayList<Integer>();
             finalPath.addAll(startToWaypoint);
             finalPath.addAll(waypointToFinal);
-            pathAlgorithm.moveRobotbyPath(finalPath, map, true);
-            System.out.println("finished");
+        }
+        else {
+            finalPath = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
+        }
+        pathAlgorithm.moveRobotbyPath(finalPath, map, true);
+        System.out.println("finished");
 
     }
 

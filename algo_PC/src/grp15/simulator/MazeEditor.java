@@ -16,6 +16,15 @@ public class MazeEditor extends JPanel implements CellColor {
 
     public MazeEditor(){
         initiate();
+        for(int i = 1; i < MAZE_HEIGHT - 1; i++) {
+            mazeMap[i][1].setVirtualWall(true);
+            mazeMap[i][MAZE_WIDTH - 2].setVirtualWall(true);
+        }
+
+        for(int i = 1; i < MAZE_WIDTH - 1; i++) {
+            mazeMap[1][i].setVirtualWall(true);
+            mazeMap[MAZE_HEIGHT - 2][i].setVirtualWall(true);
+        }
         mazeMap[Explorer.WAYPOINT_X][Explorer.WAYPOINT_Y].setColor(WAYPOINT);
     };
     protected void initiate() {
