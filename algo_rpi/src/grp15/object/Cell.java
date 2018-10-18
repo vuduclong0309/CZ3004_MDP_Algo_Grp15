@@ -76,15 +76,13 @@ public class Cell extends JPanel implements CellColor{
 
     public void setBlocked(boolean value){
         if(value == true) {
-            this.setColor(BLOCKED);
-            this.setBackground(BLOCKED);
+            if(this.color == FREE){
+                this.setColor(BLOCKED);
+                this.setBackground(BLOCKED);
+            }
         }
         else{
-            if(this.getColor() == WAYPOINT){
-                this.setColor(WAYPOINT);
-                this.setBackground(WAYPOINT);
-            }
-            else{
+            if(this.color == BLOCKED){
                 this.setColor(FREE);
                 this.setBackground(FREE);
             }

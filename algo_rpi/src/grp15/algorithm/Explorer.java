@@ -156,7 +156,7 @@ public class Explorer {
         //Burst Mode
 
         do{
-            ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
+            ArrayList<Integer> path = wallHuggingSolver.getMove(map, new RobotOrientation(map.getRobot()));
             String signal = FastestPathAlgorithm.movePathToSignalString(path) + 'o';
             System.out.println("Signal String: " + signal);
             pathAlgorithm.moveRobotbyPath(path, map, false, false);

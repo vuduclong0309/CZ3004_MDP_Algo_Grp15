@@ -132,7 +132,9 @@ public class Sensor {
                             break;
                     }
                     System.out.println("explore" + nPosX + " " + nPosY);
+                    exploredArenaMap.getCell(nPosX, nPosY).setExplored();
                     if(exploredArenaMap.getCell(nPosX, nPosY).isBlocked())
+                        System.out.println("remove wall" + nPosX + " " + nPosY);
                         exploredArenaMap.getCell(nPosX, nPosY).setBlocked(false);
                 }
             }
@@ -180,6 +182,7 @@ public class Sensor {
                 }
                 else{
                     if(exploredArenaMap.getCell(nPosX, nPosY).isBlocked())
+                        System.out.println("remove wall" + nPosX + " " + nPosY);
                         exploredArenaMap.getCell(nPosX, nPosY).setBlocked(false);
                 }
             }

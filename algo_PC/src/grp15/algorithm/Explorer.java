@@ -115,7 +115,7 @@ public class Explorer {
 
         solver = new DijkstraSolver(map.getMazeCell(), 1, 1, this.map.getRobot());
         System.out.println(map.coverage());
-        /*do{
+        do{
             System.out.println("iteration"+i);
             i++;
             distanceMap = solver.getDistanceMap();
@@ -173,7 +173,7 @@ public class Explorer {
             }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(timeout == false);*/
+        }while(timeout == false);
 
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
         String finalMapAndroid = MapDescriptor.toAndroid(map);
@@ -217,6 +217,7 @@ public class Explorer {
         finalPath.addAll(startToWaypoint);
         finalPath.addAll(waypointToFinal);
         pathAlgorithm.moveRobotbyPath(finalPath, map, true);
+
         System.out.println("finished");
     }
 

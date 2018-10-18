@@ -48,12 +48,9 @@ public class LeftWallHuggingSolver {
         System.out.println("right");
         nextpos = new RobotOrientation(pos);
         nextpos.turnRight();
-        if(isValidPosition(nextpos, true) && !isDeadEnd(nextpos, map)){
-            move = new ArrayList<Integer>(1);
-            move.add(TURN_RIGHT);
-            return move;
-        }
-        return null;
+        move = new ArrayList<Integer>(1);
+        move.add(TURN_RIGHT);
+        return move;
     }
 
     public ArrayList<Integer> getBurstMove(MazeSolver map, RobotOrientation pos){
@@ -82,21 +79,21 @@ public class LeftWallHuggingSolver {
 
     private boolean isValidPosition(RobotOrientation r, boolean exploredConstraint){
         int posX = r.getPosX(), posY = r.getPosY();
-        //System.out.println("validity check" + r.toPairFormat().toString());
+        System.out.println("validity check" + r.toPairFormat().toString());
         //out of arena
         if(posX<=0 || posX >= MAZE_HEIGHT || posY<=0 || posY >= MAZE_WIDTH) return false;
-        //System.out.println("in arena");
+        System.out.println("in arena");
         //maze position is blocked
         for(int i=0;i<=2;i++){
             for(int j=0;j<=2;j++){
-                //System.out.println((posX+i)+" "+(posY+j));
+                System.out.println((posX+i)+" "+(posY+j));
                 if(mazeMap[posX+i][posY+j].isExplored() == false) {
                     if(exploredConstraint == false) continue;
                     else return false;
                 }
-                //System.out.println("explored");
+                System.out.println("explored");
                 if(mazeMap[posX+i][posY+j].isBlocked()) return false;
-                //System.out.println("not blocked");
+                System.out.println("not blocked");
             }
         }
         System.out.println("valid");
