@@ -23,16 +23,16 @@ public class Robot {
     public static final int START = 9; //c
 
     private int S_SENSOR_LOWER_RANGE_VALUE = 1;
-    private int S_SENSOR_UPPER_RANGE_VALUE = 1;
+    private int S_SENSOR_UPPER_RANGE_VALUE = 2;
     private int L_SENSOR_LOWER_RANGE_VALUE = 1;
-    private int L_SENSOR_UPPER_RANGE_VALUE = 3;
+    private int L_SENSOR_UPPER_RANGE_VALUE = 4;
 
     public static int sensorFShortest = 1;
-    public static int sensorFLongest = 1;
+    public static int sensorFLongest = 2;
     public static int sensorLShortest = 1;
-    public static int sensorLLongest = 1;
+    public static int sensorLLongest = 2;
     public static int sensorRShortest = 1;
-    public static int sensorRLongest = 3;
+    public static int sensorRLongest = 4;
 
     public static final int TURN_COST = 1;
     public static final int MOVE_COST = 1;
@@ -174,25 +174,52 @@ public class Robot {
                 System.out.print(msgArr[i]+" ");
             }
             System.out.println("");
+            System.out.println("SRFL");
+            SHORT_RANGE_FRONT_LEFT.physicalSense(map, result[0]);
+            System.out.println("SRFC");
+            SHORT_RANGE_FRONT_CENTER.physicalSense(map, result[1]);
+            System.out.println("SRFR");
+            SHORT_RANGE_FRONT_RIGHT.physicalSense(map, result[2]);
+            System.out.println("LRR");
+            LONG_RANGE_RIGHT.physicalSense(map, result[3]);
+            System.out.println("SRLF");
+            SHORT_RANGE_LEFT_FRONT.physicalSense(map, result[4]);
+            System.out.println("SRLB");
+            SHORT_RANGE_LEFT_BACK.physicalSense(map, result[5]);
+            map.repaint();
+
+            String mapUpdate = MapDescriptor.toAndroid(map);
+
+            communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosY() + " " + this.getPosX(), Comms.MAP_STRINGS);
         }
-
-        System.out.println("SRFL");
-        SHORT_RANGE_FRONT_LEFT.physicalSense(map, result[0]);
-        System.out.println("SRFC");
-        SHORT_RANGE_FRONT_CENTER.physicalSense(map, result[1]);
-        System.out.println("SRFR");
-        SHORT_RANGE_FRONT_RIGHT.physicalSense(map, result[2]);
-        System.out.println("LRR");
-        LONG_RANGE_RIGHT.physicalSense(map, result[3]);
-        System.out.println("SRLF");
-        SHORT_RANGE_LEFT_FRONT.physicalSense(map, result[4]);
-        System.out.println("SRLB");
-        SHORT_RANGE_LEFT_BACK.physicalSense(map, result[5]);
-        map.repaint();
-
-        String mapUpdate = MapDescriptor.toAndroid(map);
-
-        communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosY() + " " + this.getPosX(), Comms.MAP_STRINGS);
+        else if(msgArr[0].equals("D") || msgArr[0].equals("H")){
+            int ax = 0, ay = 0;
+            String adir = "";
+            switch (this.direction){
+                case NORTH:
+                    ax = posX + 1;
+                    ay = posY - 1;
+                    adir = "R";
+                    break;
+                case SOUTH:
+                    ax = posX + 1;
+                    ay = posY + 3;
+                    adir = "L";
+                    break;
+                case EAST:
+                    ax = posX + 3;
+                    ay = posY + 1;
+                    adir = "D";
+                    break;
+                case WEST:
+                    ax = posX - 1;
+                    ay = posY + 1;
+                    adir = "U";
+                    break;
+            }
+            communicator.sendMsg(ay + " " + ax + " " + adir, "ARROW");
+            getSensorData(map);
+        }
     }
 
     public static String toDirectionString(int dir){
