@@ -165,31 +165,30 @@ public class Robot {
         if(msg.charAt(0) == 'X') {
             //System.out.println("Xtest");
             int ax = 0, ay = 0;
-            String adir = "";
-            switch (this.direction) {
-               /* case NORTH:
-                    ax = posX - 1;
-                    ay = posY - 2;
-                    adir = "R";
+            char adir='-';
+            switch (this.direction){
+                case NORTH:
+                    ax = posX;
+                    ay = posY - 1;
+                    adir = 'R';
                     break;
                 case SOUTH:
-                    ax = posX + 1;
-                    ay = posY + 2;
-                    adir = "L";
-                    break;
-                    */
-                case EAST:
                     ax = posX + 2;
-                    ay = posY - 1;
-                    adir = "D";
+                    ay = posY + 3;
+                    adir = 'L';
+                    break;
+                case EAST:
+                    ax = posX + 3;
+                    ay = posY;
+                    adir = 'D';
                     break;
                 case WEST:
-                    ax = posX + 1;
-                    ay = posY - 1;
-                    adir = "U";
+                    ax = posX - 1;
+                    ay = posY + 2;
+                    adir = 'U';
                     break;
             }
-            communicator.sendMsg(ax + " " + ay + " " + adir, "ARROW");
+            communicator.sendMsg((ay - 1) + " " + (ax - 1) + " " + adir, "ARROW");
             //getSensorData(map);
             result[0] = Integer.parseInt(msgArr[1]);
             result[1] = Integer.parseInt(msgArr[2]);
