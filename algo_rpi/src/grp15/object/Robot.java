@@ -194,30 +194,30 @@ public class Robot {
         }
         else if(msgArr[0].equals("D") || msgArr[0].equals("H")){
             int ax = 0, ay = 0;
-            String adir = "";
+            char adir = '-';
             switch (this.direction){
                 case NORTH:
-                    ax = posX + 1;
+                    ax = posX;
                     ay = posY - 1;
-                    adir = "R";
+                    adir = 'R';
                     break;
                 case SOUTH:
-                    ax = posX + 1;
+                    ax = posX + 2;
                     ay = posY + 3;
-                    adir = "L";
+                    adir = 'L';
                     break;
                 case EAST:
                     ax = posX + 3;
-                    ay = posY + 1;
-                    adir = "D";
+                    ay = posY;
+                    adir = 'D';
                     break;
                 case WEST:
                     ax = posX - 1;
-                    ay = posY + 1;
-                    adir = "U";
+                    ay = posY + 2;
+                    adir = 'U';
                     break;
             }
-            communicator.sendMsg(ay + " " + ax + " " + adir, "ARROW");
+            communicator.sendMsg((ay - 1) + " " + (ax - 1) + " " + adir, "ARROW");
             getSensorData(map);
         }
     }

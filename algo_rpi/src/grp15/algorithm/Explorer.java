@@ -132,7 +132,7 @@ public class Explorer {
         LeftWallHuggingSolver wallHuggingSolver = new LeftWallHuggingSolver(map.getMazeCell(), this.map.getRobot());
 
         //Single move mode
-        do{
+        /*do{
             ArrayList<Integer> path = wallHuggingSolver.getMove(map, new RobotOrientation(map.getRobot()));
             for(int j = 0; j < path.size(); j++){
                 visited[wallHuggingSolver.getRobot().getPosX()][wallHuggingSolver.getRobot().getPosY()][wallHuggingSolver.getRobot().getDirection()] = true;
@@ -150,20 +150,40 @@ public class Explorer {
                 }
             }
         }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3)));
-        //End of single mode
 
-        /*
+        //End of single mode
+        */
         //Burst Mode
 
         do{
-            ArrayList<Integer> path = wallHuggingSolver.getMove(map, new RobotOrientation(map.getRobot()));
-            String signal = FastestPathAlgorithm.movePathToSignalString(path) + 'o';
-            System.out.println("Signal String: " + signal);
-            pathAlgorithm.moveRobotbyPath(path, map, false, false);
-            map.senseMap();
+            ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
+            if(path.size() > 2) {
+                String signal = FastestPathAlgorithm.movePathToSignalString(path) + 'o';
+                System.out.println("Signal String: " + signal);
+                pathAlgorithm.moveRobotbyPath(path, map, false, false);
+                map.senseMap();
+            }
+            else {
+                for(int j = 0; j < path.size(); j++){
+                    visited[wallHuggingSolver.getRobot().getPosX()][wallHuggingSolver.getRobot().getPosY()][wallHuggingSolver.getRobot().getDirection()] = true;
+                    System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
+                    map.getRobot().moveRobot(path.get(j));
+                    map.senseMap();
+                    MapDescriptor.generateMapDescriptor(map);
+                    //for(int k=1;k<=100;k++) System.out.println("pause thread");
+                    this.map.repaint();
+                    try {
+                        Thread.sleep(1000/SPEED);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
         }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3)));
+
         //End of burst mode
-        */
+
         System.out.println("wall hug done");
 
         System.out.println("done");
