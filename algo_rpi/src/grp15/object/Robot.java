@@ -45,7 +45,7 @@ public class Robot {
     private final Sensor LONG_RANGE_RIGHT;
 
     private int posX, posY;
-    private int direction = NORTH;
+    private static int direction = NORTH;
 
     public Robot(int x, int y, int dir){
         this.posX = x;
@@ -153,9 +153,74 @@ public class Robot {
         int[] result = new int[6];
 
         String msg = communicator.recvMsg();
+       /* String inst = "";
+        if (msg.equals("X")) {
+           inst = msg;
+            msg = communicator.recvMsg();
+        }*/
+        //communicator.sendMsg("","");
+        //System.out.println(msg + " test X");
         String[] msgArr = msg.split(" ");
 
-        if (msgArr[0].equals(Comms.SENSOR_DATA)) {
+        if(msg.charAt(0) == 'X') {
+            //System.out.println("Xtest");
+            int ax = 0, ay = 0;
+            char adir='-';
+            switch (this.direction){
+                case NORTH:
+                    ax = posX;
+                    ay = posY - 1;
+                    adir = 'R';
+                    break;
+                case SOUTH:
+                    ax = posX + 2;
+                    ay = posY + 3;
+                    adir = 'L';
+                    break;
+                case EAST:
+                    ax = posX + 3;
+                    ay = posY;
+                    adir = 'D';
+                    break;
+                case WEST:
+                    ax = posX - 1;
+                    ay = posY + 2;
+                    adir = 'U';
+                    break;
+            }
+            communicator.sendMsg((ay - 1) + " " + (ax - 1) + " " + adir, "ARROW");
+            //getSensorData(map);
+            result[0] = Integer.parseInt(msgArr[1]);
+            result[1] = Integer.parseInt(msgArr[2]);
+            result[2] = Integer.parseInt(msgArr[3]);
+            result[3] = Integer.parseInt(msgArr[4]);
+            result[4] = Integer.parseInt(msgArr[5]);
+            result[5] = Integer.parseInt(msgArr[6]);
+
+            for(int i = 1; i <= 6; i++){
+                System.out.print(msgArr[i]+" ");
+            }
+            System.out.println("");
+            System.out.println("SRFL");
+            SHORT_RANGE_FRONT_LEFT.physicalSense(map, result[0]);
+            System.out.println("SRFC");
+            SHORT_RANGE_FRONT_CENTER.physicalSense(map, result[1]);
+            System.out.println("SRFR");
+            SHORT_RANGE_FRONT_RIGHT.physicalSense(map, result[2]);
+            System.out.println("LRR");
+            LONG_RANGE_RIGHT.physicalSense(map, result[3]);
+            System.out.println("SRLF");
+            SHORT_RANGE_LEFT_FRONT.physicalSense(map, result[4]);
+            System.out.println("SRLB");
+            SHORT_RANGE_LEFT_BACK.physicalSense(map, result[5]);
+            map.repaint();
+
+            String mapUpdate = MapDescriptor.toAndroid(map);
+
+            communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosY() + " " + this.getPosX(), Comms.MAP_STRINGS);
+
+        }
+        else if (msgArr[0].equals(Comms.SENSOR_DATA)) {
            /* result[0] = Integer.parseInt(msgArr[1].split(":")[1]);
             result[1] = Integer.parseInt(msgArr[2].split(":")[1]);
             result[2] = Integer.parseInt(msgArr[3].split(":")[1]);
