@@ -49,9 +49,8 @@ public class Explorer {
                 frame.setResizable(false);
                 frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+1), MAZE_HEIGHT * (GRID_SIZE+2)));
                 //setting the window location
-                frame.setLocationByPlatform(false);
-                frame.setLocation(0, 0);
-                frame.setVisible(true);
+
+
                 JButton startFastestPathButton = new JButton ("Start Fastest Path");
                 startFastestPathButton.addActionListener(new ActionListener() {
 
@@ -61,7 +60,11 @@ public class Explorer {
 
                 });
 
+                frame.setLocationByPlatform(false);
+                frame.setLocation(0, 0);
+                frame.setVisible(true);
                 frame.getContentPane().add(startFastestPathButton, BorderLayout.SOUTH);
+
 
                 startExploration();
                 while(startFP == false) {
@@ -188,6 +191,12 @@ public class Explorer {
     void startFastestPath() {
         map.getRobot().setPosRaw(1, 1, NORTH);
         map.repaint();
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
         distanceMap = solver.getDistanceMap();
