@@ -159,9 +159,9 @@ public class Explorer {
             ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
             if(path.size() > 2) {
                 path.add(-1);
-                String signal = FastestPathAlgorithm.movePathToSignalString(path);
+                String signal = FastestPathAlgorithm.movePathToSignalString(path, true);
                 System.out.println("Signal String: " + signal);
-                pathAlgorithm.moveRobotbyPath(path, map, false, false);
+                pathAlgorithm.moveRobotbyPath(path, map, false, false, true);
                 map.senseMap();
             }
             else {
@@ -251,7 +251,7 @@ public class Explorer {
 
 
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
-        pathAlgorithm.moveRobotbyPath(backToStart, map, false, true);
+        pathAlgorithm.moveRobotbyPath(backToStart, map, false, true, false);
         //String mapUpdate = MapDescriptor.toAndroid(map);
         map.getRobot().setPos(1, 1, NORTH, map);
         map.repaint();
@@ -303,7 +303,7 @@ public class Explorer {
         else {
             finalPath = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
         }
-        pathAlgorithm.moveRobotbyPath(finalPath, map, true, true);
+        pathAlgorithm.moveRobotbyPath(finalPath, map, true, true, false);
         System.out.println("finished");
 
     }

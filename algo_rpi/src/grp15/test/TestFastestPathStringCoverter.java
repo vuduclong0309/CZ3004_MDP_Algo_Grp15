@@ -17,7 +17,7 @@ public class TestFastestPathStringCoverter {
         movePath.add(MOVE_FORWARD);
         movePath.add(TURN_LEFT);
         movePath.add(MOVE_FORWARD);
-        System.out.println(FastestPathAlgorithm.movePathToSignalString(movePath));
-        System.out.println(FastestPathAlgorithm.pConvert(FastestPathAlgorithm.movePathToSignalString(movePath), 2));
+        System.out.println(FastestPathAlgorithm.movePathToSignalString(movePath, false));
+        System.out.println(FastestPathAlgorithm.pConvert(FastestPathAlgorithm.movePathToSignalString(movePath, false), 2));
     }
 }

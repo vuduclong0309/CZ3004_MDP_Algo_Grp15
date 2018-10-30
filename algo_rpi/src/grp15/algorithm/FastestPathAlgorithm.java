@@ -32,8 +32,8 @@ public class FastestPathAlgorithm {
         return res;
     }
 
-    public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath, boolean pConvert){
-        String tmp11 = movePathToSignalString(movePath);
+    public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath, boolean pConvert, boolean slowTurn){
+        String tmp11 = movePathToSignalString(movePath, slowTurn);
         String res;
         if(pConvert) res = pConvert(tmp11, 2);
         else res = tmp11;
@@ -76,7 +76,7 @@ public class FastestPathAlgorithm {
         }
     }
 
-    public static String movePathToSignalString(ArrayList<Integer> movePath){
+    public static String movePathToSignalString(ArrayList<Integer> movePath, boolean slowTurn){
         String res = "";
         int num = 0;
         for(int j = 0; j < movePath.size();j++) {
@@ -94,10 +94,12 @@ public class FastestPathAlgorithm {
                 }
                 switch (nextSignal) {
                     case TURN_LEFT:
-                        res = res + "j";
+                        if(slowTurn == false) res = res + "j";
+                        else res = res + "z";
                         break;
                     case TURN_RIGHT:
-                        res = res + "l";
+                        if(slowTurn == false) res = res + "l";
+                        else res = res + "x";
                         break;
                 }
             }
