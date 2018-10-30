@@ -60,6 +60,8 @@ public class FastestPathAlgorithm {
                 case TURN_RIGHT:
                     tmp.turnRight();
                     break;
+                case -1:
+                    break;
             }
             solver.getRobot().setPosRaw(tmp.getPosX(), tmp.getPosY(), tmp.getDirection());
 
@@ -79,7 +81,12 @@ public class FastestPathAlgorithm {
         int num = 0;
         for(int j = 0; j < movePath.size();j++) {
             int nextSignal = movePath.get(j);
-            if (nextSignal == MOVE_FORWARD) num++;
+            if( nextSignal == -1) {
+                if(num!=0) res = res + forwardNumtoString(num);
+                res = res + 'o';
+                return res;
+            }
+            else if (nextSignal == MOVE_FORWARD) num++;
             else {
                 if(num != 0) {
                     res = res + forwardNumtoString(num);

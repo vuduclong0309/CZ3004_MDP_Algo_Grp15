@@ -158,7 +158,8 @@ public class Explorer {
         do{
             ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
             if(path.size() > 2) {
-                String signal = FastestPathAlgorithm.movePathToSignalString(path) + 'o';
+                path.add(-1);
+                String signal = FastestPathAlgorithm.movePathToSignalString(path);
                 System.out.println("Signal String: " + signal);
                 pathAlgorithm.moveRobotbyPath(path, map, false, false);
                 map.senseMap();
