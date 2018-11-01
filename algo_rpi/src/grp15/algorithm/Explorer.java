@@ -50,9 +50,7 @@ public class Explorer {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.getContentPane().add(BorderLayout.CENTER, map);
                 frame.setResizable(false);
-                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+3), MAZE_HEIGHT * (GRID_SIZE+3
-
-                )));
+                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+1), MAZE_HEIGHT * (GRID_SIZE+3)));
                 JButton startFastestPathButton = new JButton ("Start Fastest Path");
                 startFastestPathButton.addActionListener(new ActionListener() {
 
@@ -191,33 +189,34 @@ public class Explorer {
 
         System.out.println("done");
         System.out.println(map.coverage());
-        /*do{
+        do{
             System.out.println("iteration"+i);
             i++;
             distanceMap = solver.getDistanceMap();
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             double gridIndex = 0;
             for(HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> entry: distanceMap.entrySet()){
-                //System.out.println("entry"+entry.toString());
+
                 int nextPosX = entry.getKey().getKey().getKey();
                 int nextPosY = entry.getKey().getKey().getValue();
                 int direction = entry.getKey().getValue();
                 int distance = entry.getValue().getKey();
                 int newIndex = falseSense(nextPosX, nextPosY, direction, map.getMazeCell()); // == 0 && !(nextPosX == 1 && nextPosY == 1)) continue;
                 //init = false;
+                System.out.println("entry"+entry.toString() + "@" + newIndex);
                 if(newIndex == 0) continue;
                 if (nextPosMinDistance == null){
 
                     if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
-                        gridIndex = newIndex;
+                        gridIndex = (double)(newIndex*newIndex)/(distance*distance*distance*distance);
                     }
-                } else if (gridIndex < (double)(newIndex*newIndex)/distance){
+                } else if (gridIndex < (double)(newIndex*newIndex)/(distance*distance*distance*distance)){
                     //System.out.println(nextPosMinDistance.toString());
 
                     if (visited[nextPosX][nextPosY][direction] == false) {
                         nextPosMinDistance = entry;
-                        gridIndex = (double)(newIndex*newIndex)/distance;
+                        gridIndex = (double)(newIndex*newIndex)/(distance*distance*distance*distance);
                     }
                 }
             }
@@ -228,28 +227,15 @@ public class Explorer {
             }
             //System.out.println(solution.get(new RobotOrientation(robot).toPairFormat()));
             ArrayList<Integer> path = solver.getPathFromDistanceMap(distanceMap, new RobotOrientation(solver.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
+            path.add(-1);
+            String signal = FastestPathAlgorithm.movePathToSignalString(path, true);
+            System.out.println("Signal String: " + signal);
+            pathAlgorithm.moveRobotbyPath(path, map, false, false, true);
+            map.senseMap();
             visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
-            for(int j = 0; j < path.size(); j++){
-                System.out.println(solver.getRobot().getPosX() + " " + solver.getRobot().getPosY() + " " + path.get(j));
-                map.getRobot().moveRobot(path.get(j));
-                map.senseMap();
-                MapDescriptor.generateMapDescriptor(map);
-                //for(int k=1;k<=100;k++) System.out.println("pause thread");
-                this.map.repaint();
-                visited[solver.getRobot().getPosX()][solver.getRobot().getPosY()][solver.getRobot().getDirection()] = true;
-                try {
-                    Thread.sleep(1000/SPEED);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            if(map.coverage() > coverageThreshold){
-                break;
-            }
 
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
-        }while(timeout == false);*/
+        }while(timeout == false);
 
 
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
