@@ -50,7 +50,9 @@ public class Explorer {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.getContentPane().add(BorderLayout.CENTER, map);
                 frame.setResizable(false);
-                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+1), MAZE_HEIGHT * (GRID_SIZE+2)));
+                frame.setSize(new Dimension(MAZE_WIDTH * (GRID_SIZE+3), MAZE_HEIGHT * (GRID_SIZE+3
+
+                )));
                 JButton startFastestPathButton = new JButton ("Start Fastest Path");
                 startFastestPathButton.addActionListener(new ActionListener() {
 
