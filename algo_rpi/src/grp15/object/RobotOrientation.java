@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.object;
 
 import javafx.util.Pair;
@@ -10,7 +13,7 @@ import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
 
-public class RobotOrientation {
+public class RobotOrientation { //This is phantom robot for algorithm computing and evaluation, moving this kind of robot doesn't affect map GUI
     private int posX, posY, direction;
 
     public RobotOrientation(Robot r){
@@ -104,6 +107,20 @@ public class RobotOrientation {
         return this;
     }
 
+    public void moveOrientation(int signal){
+        switch (signal){
+            case MOVE_FORWARD:
+                this.moveForward();
+                break;
+            case TURN_LEFT:
+                this.turnLeft();
+                break;
+            case TURN_RIGHT:
+                this.turnRight();
+                break;
+        }
+    }
+
     public Pair<Pair<Integer, Integer>, Integer> toPairFormat(){
         return new Pair(new Pair(posX,posY),direction);
     }
@@ -184,7 +201,7 @@ public class RobotOrientation {
         //this part goes according to position and number of sensors
         //we have 1 long right sensor at first row of robot
         boolean wall[] = new boolean[3];
-        wall[0] = false; wall[1] = true; wall[2] = false;
+        wall[0] = false; wall[1] = true; wall[2] = true;
         int i; int res = 0;
         for (i = 1; i <= sensorRLongest; i++) {
             for(int j = 0; j < 3; j++) {
@@ -259,7 +276,7 @@ public class RobotOrientation {
 
     int falseSenseLeftSensorData(MazeSolver map) {
         //this part goes according to position and number of sensors
-        //we have 1 left short sensor at the back left
+        //we have 2 left short sensor at the back left and front left
         boolean wall[] = new boolean[3];
         wall[0] = false; wall[1] = true; wall[2] = false;
         int i; int res = 0;
@@ -325,7 +342,7 @@ public class RobotOrientation {
         return res;
     }
 
-    //method for a full sensor
+    //get supposed number of new discoved cell if real robot is in this position
     public int falseSenseSensorData(MazeSolver map) {
         return this.falseSenseFrontSensorData(map)
                 + this.falseSenseLeftSensorData(map)
