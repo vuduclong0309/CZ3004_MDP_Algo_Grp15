@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.algorithm;
 
 import grp15.object.Cell;
@@ -22,6 +25,7 @@ public class DijkstraSolver {
         this.robot = r;
     };
 
+    // Get most optimal robot path using from one point to another using trace provided by distance map
     public ArrayList<Integer> getPathFromDistanceMap(HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap, RobotOrientation s, RobotOrientation t){
         RobotOrientation start = new RobotOrientation(s),
                 target = new RobotOrientation(t);
@@ -52,8 +56,10 @@ public class DijkstraSolver {
         return path;
     }
 
+    //Retrieve a map of all position that the robot can access to, together with cost to travel to the position and a trace for path finding
+    //Hash entry is (((posX, posY), robotDirection), (distance, trace))
     public HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> getDistanceMap(){
-        boolean st = true;
+        //This is just a standard Dijkstra implementation, the priority index is introduced in explorer
         HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> res = new HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>>();
         PriorityQueue<Pair<Integer, RobotOrientation>> q = new PriorityQueue<>(100, new PairComparator());
         RobotOrientation start = new RobotOrientation(robot);
@@ -125,7 +131,6 @@ public class DijkstraSolver {
     public Robot getRobot() {
         return this.robot;
     }
-
 
     private boolean isValidPosition(RobotOrientation r){
         int posX = r.getPosX(), posY = r.getPosY();

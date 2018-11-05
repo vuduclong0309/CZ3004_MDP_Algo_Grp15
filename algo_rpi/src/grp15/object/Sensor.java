@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.object;
 
 
@@ -14,10 +17,11 @@ public class Sensor {
     private int sensorDir;
 
     private Robot r;
-    private int displacementX; int displacementY;
+    private int displacementX; int displacementY; // Mahhattan displacement distance from robot pos
 
     private final String id;
 
+    //calculate sensor position from robot position
     public RobotOrientation getSensorOrientation(){
         int posX = 0;
         int posY = 0;

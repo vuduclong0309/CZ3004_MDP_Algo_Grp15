@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.algorithm;
 
 import grp15.algorithm.DijkstraSolver;
@@ -23,6 +26,7 @@ public class FastestPathAlgorithm {
         this.solver = s;
     }
 
+    //Delegate to Dijkstra solver
     public ArrayList<Integer> getFastestPath(RobotOrientation source, RobotOrientation target){
         RobotOrientation originalPos = new RobotOrientation(solver.getRobot());
         solver.getRobot().setPosRaw(source);
@@ -35,11 +39,14 @@ public class FastestPathAlgorithm {
     public void moveRobotbyPath(ArrayList<Integer> movePath, MazeSolver mazeMap, boolean drawPath, boolean pConvert, boolean slowTurn){
         String tmp11 = movePathToSignalString(movePath, slowTurn);
         String res;
-        if(pConvert) res = pConvert(tmp11, 2);
+        if(pConvert) res = pConvert(tmp11, 2); //convert last two number to p as agreement with hardware team
         else res = tmp11;
         System.out.println("Move path string code: " +tmp11 + " " + res);
         communicator.sendMsg(res, Comms.INSTRUCTIONS);
+
+        //Do virtual GUI update
         for(int j = 0; j < movePath.size(); j++){
+            //Highlight robot travel path
             if(drawPath == true){
                 for(int k = 0; k < 3; k++)
                     for(int l = 0; l < 3; l++) {
@@ -76,6 +83,18 @@ public class FastestPathAlgorithm {
         }
     }
 
+    /*
+        Convert path to fast robot moving format
+        String character can be z/x/j/l/digit/upperchar:
+            z: turn left slow
+            x: turn right slow
+            j: turn left fast
+            l: turn right fast
+            digit 0..9: move forward 0..9 times
+            char A..J: move forward 10..20 times
+        In exploration mode, the string will end with character o as agreed with hardware team
+     */
+    //slow turn is special turn command introduced by hardware team that reduce chance of robot misalignment
     public static String movePathToSignalString(ArrayList<Integer> movePath, boolean slowTurn){
         String res = "";
         int num = 0;
@@ -158,6 +177,7 @@ public class FastestPathAlgorithm {
         }
     }
 
+    //convert last number of digit/upperchar to p, as agreed with hardware team
     public static String pConvert(String start, int num){
         char tmp[] = new char[start.length()];
         for(int i = 0; i<start.length(); i++){

@@ -15,12 +15,14 @@ public class LeftWallHuggingSolver {
     Cell[][] mazeMap;
     Robot robot;
 
-    int turnCost, moveCost;
     public LeftWallHuggingSolver(Cell[][] maze, Robot r){
         this.mazeMap = maze;
         this.robot = r;
     };
 
+    /*
+        single move mode
+     */
     public ArrayList<Integer> getMove(MazeSolver map, RobotOrientation pos){
         ArrayList<Integer> move;
         RobotOrientation nextpos = new RobotOrientation(pos);
@@ -53,6 +55,10 @@ public class LeftWallHuggingSolver {
         return move;
     }
 
+    /*
+        Burst move mode
+        Move robot until it can discover new cell
+     */
     public ArrayList<Integer> getBurstMove(MazeSolver map, RobotOrientation pos){
         ArrayList<Integer> burstMove = new ArrayList<Integer>();
         ArrayList<Integer> nextMove;
@@ -76,7 +82,7 @@ public class LeftWallHuggingSolver {
         return this.robot;
     }
 
-
+    //Check if the robot position is valid, if exploredConstraint is true then unexplored cell is treated as an obstacle
     private boolean isValidPosition(RobotOrientation r, boolean exploredConstraint){
         int posX = r.getPosX(), posY = r.getPosY();
         //System.out.println("validity check" + r.toPairFormat().toString());
@@ -102,6 +108,7 @@ public class LeftWallHuggingSolver {
         return true;
     }
 
+    // check if robot position is dead end, which the robot only valid move is to turn backward
     private boolean isDeadEnd(RobotOrientation pos, MazeSolver map){
         if(pos.falseSenseSensorData(map) != 0) return false;
         //System.out.println("isDeadend" + pos.toPairFormat().toString());

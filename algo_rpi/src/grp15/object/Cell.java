@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.object;
 
 import javax.swing.*;
@@ -9,12 +12,11 @@ import java.awt.event.MouseEvent;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 
-
 public class Cell extends JPanel implements CellColor{
     public static final int GRID_SIZE = 32;
     private int row, col;
     private boolean explored = false;
-    private boolean isVirtualWall = false;
+    private boolean isVirtualWall = false; //if the cell is next to a wall/obstacle
     private Color color;
 
     public Cell(int row, int col){

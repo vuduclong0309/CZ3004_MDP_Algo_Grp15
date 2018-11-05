@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.simulator;
 
 import grp15.algorithm.Explorer;

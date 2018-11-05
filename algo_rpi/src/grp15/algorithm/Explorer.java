@@ -1,3 +1,6 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.algorithm;
 
 import grp15.object.Cell;
@@ -44,6 +47,7 @@ public class Explorer {
     }
 
     public void launch(){
+        //Creating MazeSolver GUI window
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 frame = new JFrame("Explorer");
@@ -66,7 +70,8 @@ public class Explorer {
                 frame.setLocation(0, 0);
                 frame.setVisible(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                
+
+                //Receive signal from Android side, code "START_EXPLORE ROBOT_POS_X ROBOT_POS_Y"
                 while(true){
                     String msg = communicator.recvMsg();
                     String msgArr[] = msg.split(" ");
@@ -90,6 +95,7 @@ public class Explorer {
                 }
                 startExploration();
 
+                //After exploration done, the robot halt to sense the medium for professor to capture exploration result
                 while(startFP == false) {
                     try {
                         System.out.println("waiting for fastest path button");
@@ -99,6 +105,9 @@ public class Explorer {
 
                     }
                 };
+
+                //Receive fastest path signal, code "START_FASTEST_PATH WAYPOINT_X WAYPOINT_Y"
+                //Waypoint is a requirement position that robot have to go through during fastest path
                 while(true){
                     String msg = communicator.recvMsg();
                     System.out.println("test1");
@@ -120,7 +129,10 @@ public class Explorer {
     }
 
     public void startExploration(){
+        //Send acknowledgement to robot
         communicator.sendMsg("o", "");
+
+        //Initialization
         map.senseMap();
         MapDescriptor.generateMapDescriptor(map);
         this.map.repaint();
@@ -153,26 +165,33 @@ public class Explorer {
 
         //End of single mode
         */
-        //Burst Mode
-
+        //Wall Hugging Burst Mode
         do{
             ArrayList<Integer> path = wallHuggingSolver.getBurstMove(map, new RobotOrientation(map.getRobot()));
-            if(path.size() > 2) {
-                path.add(-1);
+            if(path.size() > 2) { //If number of move > 2, send fast instruction string format to robot
+                path.add(-1); //conclude string with letter 'o'
+
+                //For monitoring purpose
                 String signal = FastestPathAlgorithm.movePathToSignalString(path, true);
                 System.out.println("Signal String: " + signal);
+
                 pathAlgorithm.moveRobotbyPath(path, map, false, false, true);
                 map.senseMap();
             }
-            else {
+            else { //If number of move <= 2, use slow instruction string format
                 for(int j = 0; j < path.size(); j++){
+                    //Mark visited position for Dijkstra/A* round
                     visited[wallHuggingSolver.getRobot().getPosX()][wallHuggingSolver.getRobot().getPosY()][wallHuggingSolver.getRobot().getDirection()] = true;
+
                     System.out.println(wallHuggingSolver.getRobot().getPosX() + " " + wallHuggingSolver.getRobot().getPosY() + " " + path.get(j));
+
+                    //Update map
                     map.getRobot().moveRobot(path.get(j));
                     map.senseMap();
                     MapDescriptor.generateMapDescriptor(map);
-                    //for(int k=1;k<=100;k++) System.out.println("pause thread");
                     this.map.repaint();
+
+                    //Hold thread for 1 second to prevent RPI breakdown from its bug
                     try {
                         Thread.sleep(1000/SPEED);
                     } catch (InterruptedException e) {
@@ -181,14 +200,24 @@ public class Explorer {
                     }
                 }
             }
-        }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3)));
+        }while(!map.getRobot().getOrientation().isEqual(new RobotOrientation(1, 1, 3))); //Ending position as agreed with hardware team
 
         //End of burst mode
 
         System.out.println("wall hug done");
 
-        System.out.println("done");
+        System.out.println("doing A*");
         System.out.println(map.coverage());
+        //Dijksra/A* round
+        /*
+            This algorithm introduce priority index to Dijkstra in a fashion that similar to A*.
+            However, the greedy function is:
+                F(x): H(x) ^ m / G(x) ^ n, where:
+                H(x): number of newly discovered cell at position x
+                G(x): number of robot step to travel to position x
+            By trial and error, I've selected m = 2 and n = 4 for best performance
+            Robot will move to position with highest F(x) for maximal new discovered cell with minimum moving cost
+         */
         do{
             System.out.println("iteration"+i);
             i++;
@@ -221,13 +250,15 @@ public class Explorer {
                 }
             }
             System.out.println("done entry");
-            if(nextPosMinDistance == null){
+            if(nextPosMinDistance == null){ //No more position that can update map
                 System.out.println("Exploration Completed");
                 break;
             }
             //System.out.println(solution.get(new RobotOrientation(robot).toPairFormat()));
+
+            //Move robot using fast mode robot instruction
             ArrayList<Integer> path = solver.getPathFromDistanceMap(distanceMap, new RobotOrientation(solver.getRobot()), new RobotOrientation(nextPosMinDistance.getKey()));
-            path.add(-1);
+            path.add(-1); //Conclude string with o
             String signal = FastestPathAlgorithm.movePathToSignalString(path, true);
             System.out.println("Signal String: " + signal);
             pathAlgorithm.moveRobotbyPath(path, map, false, false, true);
@@ -237,18 +268,24 @@ public class Explorer {
             //System.out.println("robot position" + solver.getRobot().getPosX() + solver.getRobot().getPosY() + solver.getRobot().getDirection());
         }while(timeout == false);
 
-
+        //Move robot back to start zone after exploration is complete
         ArrayList<Integer> backToStart = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(1, 1), WEST)));
         pathAlgorithm.moveRobotbyPath(backToStart, map, false, true, false);
         //String mapUpdate = MapDescriptor.toAndroid(map);
         map.getRobot().setPos(1, 1, NORTH, map);
         map.repaint();
+
+        //Send completion confirmation for hardware team
         communicator.sendMsg("f", Comms.INSTRUCTIONS);
+
+        //For RPI team
         try{
             TimeUnit.SECONDS.sleep(1);
         } catch (Exception e){
 
         }
+
+        //Final MDP String for grading purpose
         String [] finalMap = MapDescriptor.generateMapDescriptor(map);
         finalMapAndroid = MapDescriptor.toAndroid(map);
 
@@ -257,12 +294,16 @@ public class Explorer {
     }
 
     void startFastestPath(){
+        //Initialization
         ArrayList<Integer> finalPath = new ArrayList<Integer>();
         FastestPathAlgorithm pathAlgorithm = new FastestPathAlgorithm(solver);
-        if(map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].isExplored() == true) {
+
+        if(map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].isExplored() == true) { //Waypoint is accessible
             HashMap<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> distanceMap;
             distanceMap = solver.getDistanceMap();
 
+            //Finding best robot position that make robot touch the waypoint
+            //As a requirement, we minimize the distance between the waypoint and robot centre (best case is that robot center is over the waypoint.
             HashMap.Entry<Pair<Pair<Integer, Integer>, Integer>, Pair<Integer, Integer>> nextPosMinDistance = null;
             int minDistance = 10000;
             int minWaypointDislocation = 100;
@@ -288,7 +329,7 @@ public class Explorer {
             finalPath.addAll(startToWaypoint);
             finalPath.addAll(waypointToFinal);
         }
-        else {
+        else { //Waypoint is not accessible
             finalPath = pathAlgorithm.getFastestPath(new RobotOrientation(map.getRobot()), new RobotOrientation(new Pair(new Pair(MAZE_HEIGHT - 4, MAZE_WIDTH - 4), 0)));
         }
         pathAlgorithm.moveRobotbyPath(finalPath, map, true, true, false);
@@ -296,6 +337,7 @@ public class Explorer {
 
     }
 
+    //Evaluate position's priority index for Dijksra/A* traversal, which is the number of cell that can be disovered in given robot position
     int falseSense(int posX, int posY, int direction, Cell[][] maze){
         int res = 0;
         /*if(!maze[posX-1][posY].isExplored()) res++;
@@ -314,17 +356,23 @@ public class Explorer {
         return res;
     }
 
+    //Set sleep period between each robot command instruction if needed. The holding period is 1000ms/SPEED
+    //Speed is set to 1000000 as moving delay is not neeeded in final version
     public void setSpeed(int value){
         this.SPEED = value;
     }
+
+    //Exploration time is expired
     public void timeup(){
         this.timeout = true;
     }
 
+    //Range is 0 (empty map) to 1 (complete map) robot will go back to start zone if the discovered position is higher than this
     public void setCoverageThreshold(double input){
         this.coverageThreshold = input;
     }
 
+    //Set the waypoint
     public void setWayPoint(int wx, int wy){
         map.getMazeCell()[WAYPOINT_X][WAYPOINT_Y].setColor(FREE);
         this.WAYPOINT_X = wx;

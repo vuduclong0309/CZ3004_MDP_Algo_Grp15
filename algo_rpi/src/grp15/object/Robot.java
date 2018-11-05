@@ -1,14 +1,15 @@
+/**
+ *      created by vuduclong0309
+ */
 package grp15.object;
 
 import grp15.rpi.Comms;
 import grp15.simulator.MazeEditor;
 import grp15.simulator.MazeSolver;
-import grp15.object.Sensor;
 import grp15.util.MapDescriptor;
 
 import static grp15.Main.communicator;
-import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
-import static grp15.simulator.MazeEditor.MAZE_WIDTH;
+
 
 public class Robot {
     public static final int NORTH = 0;
@@ -20,7 +21,6 @@ public class Robot {
     public static final int TURN_LEFT = 6; //a
     public static final int TURN_RIGHT = 7; //d
     public static final int STOP = 8; //s
-    public static final int START = 9; //c
 
     private int S_SENSOR_LOWER_RANGE_VALUE = 1;
     private int S_SENSOR_UPPER_RANGE_VALUE = 2;
@@ -47,6 +47,7 @@ public class Robot {
     private int posX, posY;
     private static int direction = NORTH;
 
+    //Robot position is the index of robot bottom left occupied grid i.e if robot center is (X, Y) then posX = X-1, posY = Y-1.
     public Robot(int x, int y, int dir){
         this.posX = x;
         this.posY = y;
@@ -216,7 +217,6 @@ public class Robot {
             map.repaint();
 
             String mapUpdate = MapDescriptor.toAndroid(map);
-
             communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosY() + " " + this.getPosX(), Comms.MAP_STRINGS);
 
         }
@@ -257,7 +257,7 @@ public class Robot {
 
             communicator.sendMsg(mapUpdate + " " + toDirectionString(this.getDirection()) + " " + this.getPosY() + " " + this.getPosX(), Comms.MAP_STRINGS);
         }
-        else if(msgArr[0].equals("D") || msgArr[0].equals("H")){
+        else if(msgArr[0].equals("D") || msgArr[0].equals("H")){ //old version backward compatible
             int ax = 0, ay = 0;
             char adir = '-';
             switch (this.direction){
