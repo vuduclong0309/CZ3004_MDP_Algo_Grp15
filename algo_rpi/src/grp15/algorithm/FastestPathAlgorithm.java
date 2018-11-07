@@ -92,9 +92,9 @@ public class FastestPathAlgorithm {
             l: turn right fast
             digit 0..9: move forward 0..9 times
             char A..J: move forward 10..20 times
-        In exploration mode, the string will end with character o as agreed with hardware team
+        In exploration mode, the string will end with character o as agreed with Arduino team
      */
-    //slow turn is special turn command introduced by hardware team that reduce chance of robot misalignment
+    //slow turn is special turn command introduced by Arduino team that reduce chance of robot misalignment
     public static String movePathToSignalString(ArrayList<Integer> movePath, boolean slowTurn){
         String res = "";
         int num = 0;

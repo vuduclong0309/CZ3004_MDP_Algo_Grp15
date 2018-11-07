@@ -60,6 +60,8 @@ public class Robot {
         SHORT_RANGE_LEFT_BACK = new Sensor("srlb", S_SENSOR_LOWER_RANGE_VALUE, S_SENSOR_UPPER_RANGE_VALUE, 0, 0, WEST, this);
     }
 
+
+     // updates the robot new position after moving forward
     public void moveForward() {
         switch (this.direction) {
             case NORTH:
@@ -76,7 +78,7 @@ public class Robot {
                 break;
         }
     }
-
+    //updates robot direction after turning left
     void turnLeft() {
         switch (this.direction) {
             case NORTH:
@@ -94,6 +96,7 @@ public class Robot {
         }
     }
 
+    //updates robot direction after turning right.
     public void turnRight() {
         switch (this.direction) {
             case NORTH:
@@ -111,6 +114,7 @@ public class Robot {
         }
     }
 
+    // turn left twice for u turn
     public void turnBack() {
         this.turnLeft();
         this.turnLeft();
@@ -149,7 +153,7 @@ public class Robot {
         return this.posY;
     }
 
-    //method for a full sensor
+    // receive sensor data from Arduino, camera detection by RPI camera and process them.
     public void getSensorData(MazeSolver map) {
         int[] result = new int[6];
 
@@ -287,6 +291,7 @@ public class Robot {
         }
     }
 
+    // helper method to convert direction to String
     public static String toDirectionString(int dir){
         String res = "NSEW";
 

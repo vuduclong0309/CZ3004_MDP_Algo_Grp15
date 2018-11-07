@@ -7,7 +7,8 @@ import grp15.simulator.MazeSolver;
 import static grp15.simulator.MazeEditor.*;
 
 public class MapDescriptor {
-	
+
+    // generate map string according to map descriptor format (part 1 and 2 strings) and convert to hexadecimal.
 	public static String[] generateMapDescriptor(MazeSolver arenaMap) {
         String[] mapDescriptors = new String[2];
 
@@ -63,6 +64,7 @@ public class MapDescriptor {
         return mapDescriptors;
     }
 
+    //helper method to convert binary to hexadecimal.
     public static String binToHex(String value) {
         int bin = 0;
 
@@ -76,6 +78,7 @@ public class MapDescriptor {
         return Integer.toString(bin,16);
     }
 
+    //generate map string to format requested by Android team.
     public static String toAndroid(MazeSolver currentMap) {
 	    String mapData;
 
