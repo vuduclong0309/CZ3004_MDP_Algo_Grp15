@@ -12,8 +12,8 @@ import static grp15.object.Robot.*;
 import static grp15.simulator.MazeEditor.MAZE_HEIGHT;
 import static grp15.simulator.MazeEditor.MAZE_WIDTH;
 
-
-public class RobotOrientation { //This is phantom robot for algorithm computing and evaluation, moving this kind of robot doesn't affect map GUI
+//This is phantom robot for algorithm computing and evaluation, moving this kind of robot doesn't affect map GUI and the physical robot.
+public class RobotOrientation {
     private int posX, posY, direction;
 
     public RobotOrientation(Robot r){

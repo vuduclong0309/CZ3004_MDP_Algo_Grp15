@@ -2,7 +2,9 @@ package grp15.rpi;
 
 import java.io.*;
 import java.net.*;
-
+/*
+ * Communication class to communicate with the rpi over wifi.
+ */
 public class Comms {
     public static final String START_EXPLORE = "START_EXPLORE";                 // Android --> PC
     public static final String START_FASTEST_PATH = "START_FASTEST_PATH";       // Android --> PC
@@ -20,10 +22,12 @@ public class Comms {
     private BufferedReader reader;
 
 
+    // create an object of this class and returns it.
     public static Comms getComm() {
         return new Comms();
     }
 
+    // method to open and establish connection with rpi over wifi using Comms object.
     public void openConnection() {
         System.out.println("Opening connection...");
 
@@ -54,6 +58,7 @@ public class Comms {
         return conn.isConnected();
     }
 
+    // method to close connection with rpi
     public void closeConnection() {
         System.out.println("Closing connection.");
 
@@ -74,6 +79,7 @@ public class Comms {
             System.out.println(e.toString());
         }
     }
+    // method to send msg to rpi
     public void sendMsg(String msg, String msgType) {
         System.out.println("Sending a message");
 
@@ -103,6 +109,7 @@ public class Comms {
             sendMsg(msg, msgType);
         }
     }
+    // method to receive message from rpi
     public String recvMsg() {
         System.out.println("Receiving a message");
 

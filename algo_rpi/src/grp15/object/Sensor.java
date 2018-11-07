@@ -17,7 +17,7 @@ public class Sensor {
     private int sensorDir;
 
     private Robot r;
-    private int displacementX; int displacementY; // Mahhattan displacement distance from robot pos
+    private int displacementX; int displacementY; // Manhattan displacement distance from robot pos
 
     private final String id;
 
@@ -103,9 +103,7 @@ public class Sensor {
         this.sensorDir = dir;
     }
 
-    /**
-     * Uses the sensor direction and given value from the actual sensor to update the map.
-     */
+    //Uses the sensor direction and given value from the actual sensor to update the map.
     public void physicalSense(MazeSolver exploredArenaMap, int sensorVal) {
         RobotOrientation orientation = getSensorOrientation();
         int posX = orientation.getPosX() ;
