@@ -1,11 +1,11 @@
 CZ3004_MDP_Algo_Grp15
 ------------------
 
-This project build an efficient exploration solution for a robot to discover an uninformed maze; and calculate the shortest possible path to travel from predetermined start zone to end zone 
+The project's target is to build an efficient exploration solution for a robot to discover an uninformed maze; and calculate the shortest possible path to travel from a predetermined start zone to end zone, during which the robot also have to travel through a way point
 
-There is two version: PC version and RPI version in 2 corresponding folder. PC version is for algorithm testing without a need of robot. RPI version is used for real arena run. Detailed comment of the code is available in RPI version
+There are two versions of this project : PC version and RPI version. PC version is for virtual demonstration, algorithm discovery and algorithm testing without connecting to the real robot. Preferred and tested algorithm would be transferred to RPI version, this version mainly deals with stable robot communication and used for real arena run. Detailed comment of the code is available in RPI version
 
-This project was assembled using IntellijIDEA Ultimate 2018 with support file for Eclipse. For best testing experience, I'd recommend using Intellij. This project is not tested in other IDE.
+This project was assembled using IntellijIDEA Ultimate 2018, with support files for Eclipse. For best testing experience, I'd recommend using Intellij.
 
 Achieved result
 -------------------
