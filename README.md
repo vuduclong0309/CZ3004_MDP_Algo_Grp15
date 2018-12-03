@@ -17,4 +17,4 @@ Total number of participated team: 25
 
 Kudos for everyone in the team for a spendid result <3
  
-![leaderboardA_image](https://raw.githubusercontent.com/vuduclong0309/CZ3004_MDP_Algo_Grp15/feature/rpi/Wee11_Leader%20Board%20A(6).JPG?token=AQKA4iyDght6DAgp-2qGn18rcUGZQzJjks5b6WTTwA%3D%3D)
+![leaderboardA_image](https://raw.githubusercontent.com/vuduclong0309/CZ3004_MDP_Algo_Grp15/25684d749239312e2fb35bf19b1d71f44e026619/Wee11_Leader%20Board%20A(6).JPG)
